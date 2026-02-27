@@ -12,11 +12,15 @@ export default async function handler(req, res) {
       });
     }
 
+    // gera chave única obrigatória
+    const idempotencyKey = crypto.randomUUID();
+
     const response = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Idempotency-Key': idempotencyKey
       },
       body: JSON.stringify({
         transaction_amount: Number(valor),
