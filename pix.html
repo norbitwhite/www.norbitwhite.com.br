@@ -119,7 +119,28 @@ input,select{
 
   <div class="box hidden" id="areaPix">
     <div id="msg" class="small">Gerando...</div>
+
     <img id="qr" class="hidden" alt="QR Code PIX" />
+
+    <!-- ✅ NOVO: link + copia e cola -->
+    <div id="paylinkWrap" class="hidden" style="margin-top:10px;">
+      <a id="paylink" class="btn" href="#" target="_blank" rel="noopener noreferrer"
+         style="display:block;text-align:center;text-decoration:none;">
+        ABRIR LINK DE PAGAMENTO
+      </a>
+    </div>
+
+    <div id="copyWrap" class="hidden" style="margin-top:10px;">
+      <div class="small" style="margin-bottom:6px;">Copie e cole o código PIX:</div>
+
+      <textarea id="pixCode" readonly
+        style="width:100%;height:110px;border-radius:12px;padding:10px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.25);color:#fff;outline:none;resize:none"></textarea>
+
+      <button class="btn" id="copyBtn" type="button" style="margin-top:10px;">
+        COPIAR CÓDIGO PIX
+      </button>
+    </div>
+
     <div id="debug" class="small" style="margin-top:10px;"></div>
   </div>
 </div>
@@ -140,6 +161,13 @@ const areaPix = document.getElementById("areaPix");
 const msg = document.getElementById("msg");
 const qrImg = document.getElementById("qr");
 const debug = document.getElementById("debug");
+
+// ✅ novos
+const paylinkWrap = document.getElementById("paylinkWrap");
+const paylink = document.getElementById("paylink");
+const copyWrap = document.getElementById("copyWrap");
+const pixCode = document.getElementById("pixCode");
+const copyBtn = document.getElementById("copyBtn");
 
 const VALOR_BASE = 15;
 let pollTimer = null;
@@ -202,11 +230,12 @@ function startPolling(paymentId){
       if(st.status === "approved"){
         clearInterval(pollTimer);
         msg.textContent = "PAGAMENTO CONFIRMADO ✅ Inscrição validada!";
+        debug.textContent = `Status: ${st.status} (${st.status_detail || ""})`.trim();
         return;
       }
 
       msg.textContent = "Aguardando pagamento...";
-      debug.textContent = `Status: ${st.status}`;
+      debug.textContent = `Status: ${st.status}${st.status_detail ? " • " + st.status_detail : ""}`;
 
     }catch(e){
       debug.textContent = e.message;
@@ -214,12 +243,39 @@ function startPolling(paymentId){
   }, 3500);
 }
 
+// ✅ copiar código PIX
+async function copiarPix(){
+  const text = (pixCode.value || "").trim();
+  if(!text){
+    alert("Código PIX ainda não carregou.");
+    return;
+  }
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      pixCode.focus();
+      pixCode.select();
+      document.execCommand("copy");
+    }
+    alert("Código PIX copiado!");
+  }catch(e){
+    alert("Não deu pra copiar automaticamente. Segura no texto e copie manualmente.");
+  }
+}
+copyBtn.addEventListener("click", copiarPix);
+
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
   btn.disabled = true;
 
   areaPix.classList.remove("hidden");
   qrImg.classList.add("hidden");
+  paylinkWrap.classList.add("hidden");
+  copyWrap.classList.add("hidden");
+  pixCode.value = "";
+
   msg.textContent = "Gerando PIX...";
   debug.textContent = "";
 
@@ -238,12 +294,30 @@ form.addEventListener("submit", async (e)=>{
       nome
     });
 
-    qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
-    qrImg.classList.remove("hidden");
-    msg.textContent = "PIX gerado!";
-    debug.textContent = "Payment ID: " + data.payment_id;
+    // ✅ QR
+    if(data.qr_code_base64){
+      qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
+      qrImg.classList.remove("hidden");
+    }
 
-    startPolling(data.payment_id);
+    // ✅ copia e cola
+    if(data.qr_code){
+      pixCode.value = data.qr_code;
+      copyWrap.classList.remove("hidden");
+    }
+
+    // ✅ link de pagamento (aceita vários nomes que a API pode devolver)
+    const url = data.payment_url || data.init_point || data.ticket_url || data.checkout_url || data.link;
+    if(url){
+      paylink.href = url;
+      paylinkWrap.classList.remove("hidden");
+    }
+
+    msg.textContent = "PIX gerado!";
+    debug.textContent = "Payment ID: " + (data.payment_id || data.id || "N/A");
+
+    const pid = data.payment_id || data.id;
+    if(pid) startPolling(pid);
 
   }catch(err){
     msg.textContent = err.message;

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback • Norbit White</title>
+
+<style>
+:root{
+  --bg:#000;
+  --card:#0b0014;
+  --stroke:rgba(161,0,255,.25);
+  --purple:#a100ff;
+  --purple2:#6f00ff;
+  --grad:linear-gradient(90deg,#6f00ff,#a100ff);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,system-ui,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#000;
+  color:#fff;
+}
+
+.wrap{
+  width:100%;
+  max-width:750px;
+}
+
+.top{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:999px;
+  background:rgba(161,0,255,.12);
+  border:1px solid var(--stroke);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+h1{
+  margin-top:14px;
+  font-size:30px;
+  font-weight:950;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.sub{
+  margin-top:10px;
+  font-size:14px;
+  opacity:.75;
+}
+
+/* card */
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 25px 90px rgba(0,0,0,.9);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+@media(max-width:720px){
+  .grid{grid-template-columns:1fr;}
+}
+
+label{
+  display:block;
+  margin:16px 0 6px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.optional{
+  font-size:12px;
+  font-weight:600;
+  opacity:.6;
+  margin-left:6px;
+}
+
+.field{
+  width:100%;
+  padding:13px 14px;
+  border-radius:14px;
+  border:1px solid rgba(161,0,255,.18);
+  background:#000;
+  color:#fff;
+  outline:none;
+  transition:.2s;
+}
+
+.field::placeholder{
+  color:rgba(255,255,255,.45);
+}
+
+.field:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 2px rgba(161,0,255,.2);
+}
+
+textarea.field{
+  min-height:120px;
+  resize:vertical;
+}
+
+/* botão */
+.btn{
+  width:100%;
+  margin-top:22px;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:var(--grad);
+  color:#fff;
+  font-weight:900;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover{
+  filter:brightness(1.1);
+}
+
+.notice{
+  margin-top:15px;
+  padding:12px;
+  border-radius:14px;
+  display:none;
+  font-size:14px;
+}
+
+.notice.show{display:block;}
+.notice.ok{background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.35);}
+.notice.err{background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.35);}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  opacity:.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <div class="badge">FEEDBACK</div>
+    <h1>Opinião sobre o Campeonato</h1>
+    <p class="sub">Ajude a melhorar o campeonato e o site.</p>
+  </div>
+
+  <div class="card">
+    <form id="feedbackForm" action="https://formspree.io/f/xnjbwvkd" method="POST">
+
+      <div class="grid">
+        <div>
+          <label>Email <span class="optional">(Opcional)</span></label>
+          <input class="field" type="email" name="email"
+            placeholder="Escreva seu email">
+        </div>
+
+        <div>
+          <label>WhatsApp <span class="optional">(Opcional)</span></label>
+          <input class="field" type="text" name="whatsapp"
+            placeholder="Escreva seu número">
+        </div>
+      </div>
+
+      <label>Tem interesse em participar do campeonato?</label>
+      <select class="field" name="interesse_campeonato" required>
+        <option value="" disabled selected>Selecione</option>
+        <option>Sim</option>
+        <option>Talvez</option>
+        <option>Não</option>
+      </select>
+
+      <label>Você acha o valor de inscrição justo?</label>
+      <select class="field" name="valor_justo" required>
+        <option value="" disabled selected>Selecione</option>
+        <option>Sim, está justo</option>
+        <option>Poderia ser menor</option>
+        <option>Poderia ser maior (com mais premiação)</option>
+      </select>
+
+      <label>Avaliação do site (0 a 10)</label>
+      <select class="field" name="avaliacao_site" required>
+        <option value="" disabled selected>Selecione</option>
+        <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+      </select>
+
+      <label>Dicas e sugestões</label>
+      <textarea class="field" name="message" required></textarea>
+
+      <input type="hidden" name="_subject" value="Novo Feedback - Campeonato Norbit White">
+
+      <button class="btn" type="submit">ENVIAR FEEDBACK</button>
+
+      <div id="notice" class="notice"></div>
+    </form>
+  </div>
+
+  <div class="footer"  </div> ©2026 Norbit White • Campeonato Warzone</div>
+</div>
+
+<script>
+const form=document.getElementById("feedbackForm");
+const notice=document.getElementById("notice");
+
+form.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  notice.className="notice show";
+  notice.textContent="Enviando...";
+
+  try{
+    const res=await fetch(form.action,{
+      method:"POST",
+      headers:{"Accept":"application/json"},
+      body:new FormData(form)
+    });
+
+    if(res.ok){
+      notice.className="notice show ok";
+      notice.textContent="Feedback enviado com sucesso ✅";
+      form.reset();
+    }else{
+      notice.className="notice show err";
+      notice.textContent="Erro ao enviar.";
+    }
+  }catch{
+    notice.className="notice show err";
+    notice.textContent="Sem conexão.";
+  }
+});
+</script>
+
+</body>
+</html>

@@ -7,191 +7,346 @@
 
 <style>
 :root{
-  --bg:#07020c;
-  --bg2:#040107;
-  --card:rgba(255,255,255,.05);
+  --bg:#000;
+  --bg2:#050208;
+
+  /* QUADRADÕES GRANDES (todos iguais) */
+  --card:rgba(255,255,255,.055);
   --stroke:rgba(255,255,255,.10);
+
+  /* QUADRADINHOS INTERNOS (todos iguais) */
+  --panel:rgba(0,0,0,.40);
+  --panelStroke:rgba(255,255,255,.10);
+
+  --accentStroke:rgba(161,0,255,.22);
+  --accentFill:rgba(161,0,255,.10);
+
   --text:#fff;
-  --muted:rgba(255,255,255,.70);
-  --muted2:rgba(255,255,255,.55);
+  --muted:rgba(255,255,255,.76);
+  --muted2:rgba(255,255,255,.60);
+
   --grad:linear-gradient(90deg,#6f00ff,#a100ff);
   --r:22px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif;}
+html,body{height:100%;}
 
 body{
   color:var(--text);
-  background:
-    radial-gradient(900px 450px at 20% 0%, rgba(161,0,255,.15), transparent 55%),
-    linear-gradient(180deg, var(--bg), var(--bg2));
-  text-align:center;
+  background:#000;
+  overflow-x:hidden;
 }
 
-.wrapper{
-  max-width:900px;
-  margin:0 auto;
-  padding:0 18px 70px;
-}
+.wrapper{max-width:1000px;margin:0 auto;padding:0 18px 80px;}
 
-/* HEADER */
 .header{
-  padding:60px 18px 30px;
+  text-align:center;
+  padding:60px 10px 28px;
 }
-
 .header h1{
-  font-size:38px;
+  font-size:40px;
   font-weight:950;
+  letter-spacing:1px;
   background:var(--grad);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-
 .header p{
-  margin-top:12px;
+  margin-top:10px;
   color:var(--muted);
-  font-weight:600;
+  font-weight:650;
   line-height:1.6;
 }
 
-/* CARD */
+/* TODOS OS QUADRADÕES GRANDES IGUAIS */
 .card{
-  margin-top:18px;
-  padding:22px 18px;
+  margin-top:20px;
+  padding:26px 22px;
   border-radius:var(--r);
   background:var(--card);
   border:1px solid var(--stroke);
 }
 
-/* HERO */
+/* HERO SEM COR DIFERENTE */
 .hero{
-  border:1px solid rgba(161,0,255,.25);
-  background:rgba(0,0,0,.35);
+  text-align:center;
+  background:var(--card);
+  border:1px solid var(--stroke);
 }
 
 .kicker{
   font-size:12px;
-  letter-spacing:1.5px;
-  font-weight:900;
-  color:rgba(255,255,255,.75);
+  letter-spacing:1.6px;
+  font-weight:950;
+  color:rgba(255,255,255,.76);
 }
 
 .date{
-  margin-top:8px;
+  margin-top:10px;
   font-size:22px;
   font-weight:950;
 }
 
 .sub{
-  margin-top:10px;
+  margin:12px auto 0;
+  max-width:820px;
   font-size:14px;
   color:var(--muted2);
-  line-height:1.6;
+  line-height:1.75;
 }
 
-/* BUTTON */
+.sep{
+  height:1px;
+  width:100%;
+  margin:18px 0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+  border-radius:999px;
+}
+
 .btn{
   margin-top:18px;
-  padding:14px 22px;
+  padding:14px 26px;
   border:none;
   border-radius:16px;
-  font-weight:900;
-  letter-spacing:.5px;
+  font-weight:950;
+  letter-spacing:.4px;
   color:#fff;
   background:var(--grad);
   cursor:pointer;
-  transition:.2s;
+  transition:.18s ease;
 }
+.btn:hover{opacity:.92; transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
 
-.btn:hover{opacity:.9}
-
-/* INFO */
+/* QUADRADINHOS (DATA/HORA/JOGO e TEMPO) TODOS IGUAIS */
 .info-row{
-  margin-top:20px;
+  margin-top:18px;
   display:flex;
   justify-content:center;
-  gap:20px;
+  gap:14px;
   flex-wrap:wrap;
 }
-
 .info{
-  padding:14px 18px;
+  min-width:150px;
+  padding:14px 16px;
   border-radius:16px;
-  background:rgba(0,0,0,.35);
-  border:1px solid var(--stroke);
-  min-width:140px;
+  background:var(--panel);
+  border:1px solid var(--panelStroke);
+  text-align:center;
 }
-
 .info small{
   display:block;
   font-size:11px;
-  color:var(--muted2);
-  font-weight:800;
   letter-spacing:1px;
+  font-weight:900;
+  color:var(--muted2);
 }
-
 .info b{
   display:block;
   margin-top:5px;
   font-size:15px;
-  font-weight:900;
-}
-
-/* COUNTDOWN 2x2 */
-.countdown{
-  margin-top:20px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  justify-items:center;
-}
-
-.time{
-  width:110px;
-  padding:14px 10px;
-  border-radius:18px;
-  background:rgba(0,0,0,.35);
-  border:1px solid var(--stroke);
-}
-
-.time b{
-  font-size:22px;
   font-weight:950;
-  display:block;
+}
+
+.section-title{
+  text-align:center;
+  font-size:16px;
+  font-weight:950;
+  letter-spacing:1px;
+  margin-bottom:14px;
   background:var(--grad);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.time small{
-  font-size:12px;
-  color:var(--muted2);
-  font-weight:800;
-  letter-spacing:1px;
-}
-
-/* TITLES */
-.title{
-  font-size:14px;
-  font-weight:900;
-  letter-spacing:1px;
-  margin-bottom:10px;
-  opacity:.9;
-}
-
-/* TEXT BLOCK */
 .text{
+  text-align:center;
   font-size:14px;
   color:var(--muted);
-  line-height:1.7;
+  line-height:1.85;
+  max-width:920px;
+  margin:0 auto;
 }
 
-/* FOOTER */
+/* PREMIAÇÃO / INSCRIÇÃO */
+.premios{
+  margin-top:12px;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.box{
+  width:240px;
+  height:140px;
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:var(--panel);
+  border:1px solid var(--panelStroke);
+}
+.box span{
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:1px;
+  color:rgba(255,255,255,.78);
+  text-transform:uppercase;
+}
+.box b{
+  margin-top:7px;
+  font-size:34px;
+  font-weight:950;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* COUNTDOWN */
+.countdown{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(90px, 1fr));
+  gap:12px;
+  max-width:720px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.time{
+  padding:16px 10px;
+  border-radius:18px;
+  background:var(--panel);
+  border:1px solid var(--panelStroke);
+  text-align:center;
+}
+.time b{
+  display:block;
+  font-size:26px;
+  font-weight:950;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.time small{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:var(--muted2);
+}
+
+/* PONTUAÇÃO */
+.pontos{
+  margin-top:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-width:820px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.linha{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  border-radius:16px;
+  background:var(--panel);
+  border:1px solid var(--panelStroke);
+}
+.linha span{
+  font-weight:900;
+  color:rgba(255,255,255,.88);
+}
+.linha strong{
+  font-weight:950;
+  background:linear-gradient(90deg, rgba(161,0,255,.92), rgba(111,0,255,.70));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.linha.destaque{
+  background:var(--accentFill);
+  border:1px solid var(--accentStroke);
+}
+
+/* IMPORTANTE */
+.alert{
+  background:var(--card);
+  border:1px solid var(--stroke);
+}
+.badge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:fit-content;
+  margin:18px auto 0;
+  padding:12px 22px;
+  border-radius:999px;
+  background:rgba(161,0,255,.10);
+  border:1px solid rgba(161,0,255,.28);
+  color:#fff;
+  font-weight:950;
+  font-size:13px;
+  letter-spacing:1px;
+  text-align:center;
+}
+
+/* REGRAS */
+.rules{
+  max-width:920px;
+  margin:0 auto;
+  text-align:left;
+}
+.rules p{
+  color:var(--muted);
+  line-height:1.85;
+  font-size:14px;
+}
+.rules ul, .rules ol{
+  margin-top:12px;
+  padding-left:20px;
+  color:var(--muted);
+  line-height:1.95;
+  font-size:14px;
+}
+.rules li{margin:8px 0;}
+.rules b{color:#fff;font-weight:950;}
+
+.note{
+  margin-top:12px;
+  padding:14px;
+  border-radius:16px;
+  background:var(--panel);
+  border:1px solid var(--panelStroke);
+}
+
+/* REMOVE FUNDO BUGADO ATRÁS DAS LETRAS */
+.text,
+.rules, .rules p,
+.rules ul, .rules ol,
+.rules li, .rules li *{
+  background: transparent !important;
+}
+.rules b, .rules strong, .rules em, .rules span, .rules a{
+  background: transparent !important;
+}
+
+/* Footer */
 .footer{
-  margin-top:30px;
+  margin-top:34px;
   padding:18px;
+  text-align:center;
   font-size:13px;
   color:rgba(255,255,255,.5);
+}
+
+@media (max-width:520px){
+  .header h1{font-size:34px;}
+  .countdown{grid-template-columns:repeat(2,1fr);}
+  .box{width:100%;}
 }
 </style>
 </head>
@@ -200,14 +355,15 @@ body{
 
 <div class="header">
   <h1>CAMPEONATO WARZONE</h1>
-  <p>Clique em Quero Participar e venha para o Combate.</p>
+  <p>Clique em quero participar e Inscreva-se já</p>
 </div>
 
 <div class="wrapper">
 
+  <!-- HERO -->
   <div class="card hero">
-    <div class="kicker">EVENTO OFICIAL</div>
-    <div class="date">04/04/2026 • 20:00 (BRT)</div>
+    <div class="kicker">CAMPEONATO AMADOR</div>
+    <div class="date">4 de Abril • 20:00 (BRT)</div>
     <div class="sub">
       Clique no botão abaixo para acessar a página de pagamento e garantir sua inscrição.
     </div>
@@ -220,40 +376,193 @@ body{
       <div class="info"><small>JOGO</small><b>WARZONE</b></div>
     </div>
 
+    <div class="sep"></div>
+
+    <div class="section-title">CONTAGEM REGRESSIVA</div>
     <div class="countdown">
       <div class="time"><b id="d">00</b><small>DIAS</small></div>
       <div class="time"><b id="h">00</b><small>HORAS</small></div>
       <div class="time"><b id="m">00</b><small>MIN</small></div>
       <div class="time"><b id="s">00</b><small>SEG</small></div>
     </div>
+
+    <div class="sep"></div>
+
+    <div class="sub">Ao finalizar o pagamento, sua inscrição será validada automaticamente.</div>
   </div>
 
+  <!-- PREMIAÇÃO + INSCRIÇÃO -->
   <div class="card">
-    <div class="title">PREMIAÇÃO</div>
+    <div class="section-title">PREMIAÇÃO E INSCRIÇÃO</div>
+
+    <div class="premios">
+      <div class="box">
+        <span>R$160 EM PREMIAÇÕES</span>
+        <b>R$160</b>
+      </div>
+
+      <div class="box">
+        <span>VALOR DA INSCRIÇÃO</span>
+        <b>R$15</b>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
     <div class="text">
-      O primeiro lugar recebe R$ 100, o segundo lugar recebe R$ 60 e o terceiro lugar ganha inscrição gratuita no próximo campeonato.
+      1º Lugar: <b>R$100</b><br>
+      2º Lugar: <b>R$60</b><br>
+      3º Lugar: <b>Inscrição gratuita no próximo campeonato</b>
     </div>
   </div>
 
+  <!-- COMO PARTICIPAR -->
   <div class="card">
-    <div class="title">COMO PARTICIPAR</div>
+    <div class="section-title">COMO PARTICIPAR</div>
     <div class="text">
-      Clique em “Quero Participar”, gere o QR Code do PIX, realize o pagamento e aguarde a confirmação automática. Assim que o pagamento for aprovado, sua inscrição estará validada.
+      Clique em “Quero Participar”, gere o QR Code do PIX, realize o pagamento e aguarde a confirmação automática.
+      Assim que o pagamento for aprovado, sua inscrição estará validada.
     </div>
   </div>
 
+  <!-- PONTUAÇÃO -->
   <div class="card">
-    <div class="title">REGRAS</div>
+    <div class="section-title">COMO FUNCIONA A PONTUAÇÃO?</div>
     <div class="text">
-      É proibido o uso de trapaças, cheats ou glitches. É obrigatório manter respeito no chat e durante as partidas. A organização pode solicitar prints ou clips para validação.
+      Pontuação dentro do lobby. Some seus <b>kills</b> e sua <b>colocação final</b> para definir o ranking.
+    </div>
+
+    <div class="pontos">
+      <div class="linha"><span>Kill</span><strong>10 pontos</strong></div>
+      <div class="linha destaque"><span>Primeiro lugar</span><strong>200 pontos</strong></div>
+      <div class="linha"><span>Segundo lugar</span><strong>130 pontos</strong></div>
+      <div class="linha"><span>Terceiro lugar</span><strong>110 pontos</strong></div>
+      <div class="linha"><span>Quarto lugar</span><strong>90 pontos</strong></div>
+      <div class="linha"><span>Quinto lugar</span><strong>80 pontos</strong></div>
+      <div class="linha"><span>Sexto a Oitavo</span><strong>70 pontos</strong></div>
+      <div class="linha"><span>Nono a Décimo</span><strong>60 pontos</strong></div>
+      <div class="linha"><span>11 a 15</span><strong>30 pontos</strong></div>
+      <div class="linha"><span>16 a 20</span><strong>15 pontos</strong></div>
+    </div>
+  </div>
+
+  <!-- IMPORTANTE -->
+  <div class="card alert">
+    <div class="section-title">IMPORTANTE</div>
+    <div class="text">
+      Sabemos que ocorrem desconexões dentro do lobby e também alguns jogadores não recebem o convite no momento.
+      Infelizmente são erros do jogo que não podemos arrumar, por isso teremos <b>5 quedas</b> e serão
+      <b>pontuadas apenas as 3 melhores</b>. Não serão feitas novas quedas além destas!
+    </div>
+    <div class="badge">5 QUEDAS • 3 PONTUADAS</div>
+  </div>
+
+  <!-- REGRAS E RESPONSABILIDADES -->
+  <div class="card">
+    <div class="section-title">REGRAS E RESPONSABILIDADES</div>
+
+    <div class="rules">
+      <ul>
+        <li><b>A partida só será reiniciada</b> caso caia <b>30% do lobby</b>. Do contrário, a partida será considerada válida.</li>
+
+        <li>Todos os participantes que se inscreverem no torneio estão cientes de que poderão ocorrer quedas de equipes do servidor e outros problemas com o Lobby. Ressaltamos que a organização <b>não se responsabiliza</b> pelos possíveis problemas da Activision.</li>
+
+        <li>A Organização se isenta de qualquer responsabilidade sobre quaisquer <b>acordos de cavalheiros</b> firmados entre os jogadores do torneio.</li>
+
+        <li>A Organização se isenta de quaisquer responsabilidades caso algum jogador externo venha a acessar o <b>LOBBY</b> do campeonato e retirar o lugar de alguém da equipe que está participando do torneio.</li>
+
+        <li><b>Abaixo pontos a serem seguidos</b> caso isso ocorra:
+          <ul>
+            <li>Caso isso ocorra, a organização deve ser avisada com antecedência, <b>antes do início da partida</b>.</li>
+            <li>É obrigatório deixar a party da equipe como <b>"Somente convite"</b>, ou seja, apenas quem for convidado pode acessar a party.</li>
+          </ul>
+        </li>
+
+        <li>Todos os participantes estão de acordo com o uso de <b>nome e imagem</b> para divulgação.</li>
+
+        <li>Todas as equipes podem ter um nome como <b>reserva</b> no time.</li>
+
+        <li>Só poderá ser acionado o reserva caso um membro da <b>line-up oficial</b> tiver algum problema.</li>
+
+        <li>É proibido o uso de <b>trapaças, cheats ou glitches</b>. É obrigatório manter respeito no chat e durante as partidas. A organização pode solicitar prints ou clips para validação.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CRITÉRIO DE DESEMPATE -->
+  <div class="card">
+    <div class="section-title">CRITÉRIO DE DESEMPATE</div>
+
+    <div class="rules">
+      <p>Caso ocorra empate, segue o critério para desempate:</p>
+      <ol>
+        <li><b>1º critério:</b> Jogador com mais eliminações individuais somadas entre as partidas.</li>
+        <li><b>2º critério:</b> Se ainda houver empate, comparar o segundo jogador com mais eliminações.</li>
+        <li><b>3º critério:</b> Se ainda houver empate, comparar o terceiro jogador com mais eliminações.</li>
+        <li><b>4º critério:</b> Se ainda houver empate, a equipe que tiver mais vitórias nas duas partidas escolhidas.</li>
+        <li><b>5º critério:</b> Se ainda houver empate, irá acontecer uma partida adicional, em lobby aberto, seguindo o mesmo formato do campeonato.</li>
+        <li><b>6º critério:</b> Caso ainda haja empate, a revisão do 5º critério de desempate será feita baseada nos 4 primeiros critérios listados acima.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- CONDUTA / PUNIÇÕES -->
+  <div class="card">
+    <div class="section-title">CONDUTA, PUNIÇÕES E ITENS PROIBIDOS</div>
+
+    <div class="rules">
+      <ul>
+        <li>
+          É passível de punição e desclassificação os jogadores que se dirigirem aos organizadores do campeonato com palavras de baixo calão e/ou palavrões, gestos obscenos por fotos, emotes, imagens, vídeos, áudios ou quaisquer meios de comunicação, como Ligação Telefônica, WhatsApp, Discord, e-mail e chat de transmissão do torneio. A punição para esse tipo de comportamento será avaliada pela organização, podendo gerar:
+          <ul>
+            <li><b>Desclassificação da equipe</b>;</li>
+            <li><b>Banimento</b> dos próximos campeonatos da War Zone League Brazil.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="note">
+        <p><b>Punição pela utilização de itens proibidos pela organização:</b></p>
+        <ol>
+          <li><b>1ª Punição:</b> perda dos pontos totais da partida onde se utilizou o item proibido.</li>
+          <li><b>2ª Punição:</b> desclassificação do torneio.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIREITOS DE PROPRIEDADE INTELECTUAL -->
+  <div class="card">
+    <div class="section-title">DIREITOS DE PROPRIEDADE INTELECTUAL</div>
+
+    <div class="rules">
+      <ul>
+        <li>
+          Ao participar do torneio, você concorda que qualquer material de apoio enviado por você e sua equipe foram criados legalmente e são trabalhos originais. Você declara e garante que os materiais não infringem ou se apropriam indevidamente dos direitos de propriedade intelectual de terceiros, além de garantir que você irá defender a administração do torneio e seus respectivos parceiros, acionistas, agentes, gerentes, diretores, oficiais, e suas respectivas afiliadas (coletivamente, as "Partes da Organização") de quaisquer danos, perdas, custos (incluindo honorários advocatícios), responsabilidades e causas de ação decorrentes de ou em conexão com violação real ou alegada de direitos de propriedade intelectual de terceiros pelo uso autorizado dos materiais.
+        </li>
+
+        <li>
+          Você concede às Partes da Organização o direito absoluto, mundial e irrevogável e a permissão irrestrita de usar o conteúdo de qualquer gravação (incluindo vídeo, voz e formatos escritos) feita anteriormente, durante ou depois da sua participação no evento, para usar, reproduzir, distribuir, modificar e exibir palavras, escritos, semelhança, imagem, voz, nome e aparência. Todos os conteúdos captados podem ser incorporados em quaisquer documentos, fotos, gravações de vídeo, fitas de áudio, imagens digitais e semelhantes, incluindo qualquer trabalho derivado dos mesmos, feitas em nome da organização em conexão com sua participação (doravante coletivamente denominados "Gravações").
+        </li>
+
+        <li>
+          Você concorda que as Partes da Organização têm o direito absoluto de criar materiais em que você e sua equipe estejam presentes, podendo utilizá-los para qualquer propósito, incluindo usos promocionais, comerciais, educacionais e de testemunho em vídeos, publicações, anúncios, comunicados à imprensa, sites ou qualquer outro material promocional, depoimento, comercial ou educacional em qualquer meio.
+        </li>
+
+        <li>
+          Você reconhece que não receberá qualquer compensação pelo uso de tais imagens, vídeo, semelhança, aparência ou conteúdo e as renúncias e liberações que você concede ao participar são em consideração à administração do torneio.
+        </li>
+
+        <li>
+          Você entende que as gravações do campeonato ou gravações relacionadas devem ser de propriedade exclusiva das Partes da Organização, incluindo, se aplicável, suas respectivas afiliadas, parceiros comerciais e representantes; nem você nem qualquer terceiro terá quaisquer direitos de possuir ou usar as Gravações de qualquer forma, a não ser autorizado pela Organização. Na medida em que quaisquer nomes, logotipos ou marcas (doravante as "Marcas") aparecerem nas gravações, você entende que não haverá quaisquer custos para a organização do evento pela divulgação de tais marcas.
+        </li>
+      </ul>
     </div>
   </div>
 
 </div>
 
-<div class="footer">
-  © Norbit White • Campeonato Warzone
-</div>
+<div class="footer">© Norbit White • Campeonato Warzone</div>
 
 <script>
 function goPix(){

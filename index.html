@@ -2,487 +2,329 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Norbit White Design</title>
 
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7653548529657471"
-crossorigin="anonymous"></script>
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NWL4CS76LG"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-NWL4CS76LG');
-</script>
-
 <style>
+html,body{overflow-x:hidden;max-width:100%;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{background: radial-gradient(circle at top,#1a0033 0%,#000 70%);color:white;overflow-x:hidden;}
+body{background:#000;color:#fff;}
 
-/* HEADER */
-header{text-align:center;padding:40px 20px;background:linear-gradient(160deg,#111,#1c1c1c);border-bottom:1px solid rgba(161,0,255,0.3); position:relative;}
-header h1{font-size:36px;font-weight:800;}
-header p{margin-top:8px;color:#ccc;}
+/* ===== FUNDO CINEMATOGRÁFICO ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url('flyer2.jpg') center/cover no-repeat;
+  transform:scale(1.06);
+  filter:blur(1px) brightness(0.60);
+  opacity:0.85;
+  z-index:-5;
+  animation:cameraMove 30s ease-in-out infinite alternate;
+}
 
-/* SLIDER */
-.slider{overflow:hidden;margin-top:20px;}
-.slider-track{display:flex;gap:20px;width:max-content;animation:scrollSlider 25s linear infinite;}
-.slide{min-width:280px;height:170px;border-radius:15px;overflow:hidden;border:1px solid rgba(161,0,255,0.5);}
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  background:
+    linear-gradient(120deg,
+      transparent 47%,
+      rgba(140,0,255,0.05) 49%,
+      rgba(255,0,255,0.07) 50%,
+      rgba(140,0,255,0.05) 51%,
+      transparent 53%
+    ),
+    rgba(0,0,0,0.82);
+  background-size:220% 220%;
+  z-index:-4;
+  animation:energyFlow 22s linear infinite;
+}
+
+@keyframes cameraMove{
+  0%{transform:scale(1.06) translate(0,0);}
+  50%{transform:scale(1.08) translate(-12px,8px);}
+  100%{transform:scale(1.06) translate(0,0);}
+}
+@keyframes energyFlow{
+  0%{background-position:0% 50%;}
+  100%{background-position:220% 50%;}
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  display:flex;align-items:center;justify-content:flex-start;
+  padding:0 20px;background:rgba(0,0,0,0.9);
+  border-bottom:1px solid rgba(161,0,255,0.25);z-index:9999;
+}
+.hamburger{font-size:26px;cursor:pointer;}
+.brand{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-weight:900;font-size:18px;
+}
+
+/* ===== MENU (ABRE NA ESQUERDA) ===== */
+.menu{
+  position:fixed;
+  top:0;
+  left:-260px;           /* era right:-260px */
+  width:250px;
+  height:100%;
+  background:#0a0014;
+  padding:80px 20px;
+  transition:0.3s;
+  z-index:9998;
+}
+.menu.active{left:0;}     /* era right:0 */
+.menu a{
+  display:block;color:#fff;text-decoration:none;margin-bottom:15px;font-weight:800;
+}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  display:none;z-index:9997;
+}
+.overlay.active{display:block;}
+
+/* ===== HERO ===== */
+.hero{padding:120px 20px 35px;text-align:center;}
+.flyer-container{
+  position:relative;max-width:900px;margin:0 auto;aspect-ratio:1/1;
+  border-radius:30px;overflow:hidden;
+  background:url('flyer1.jpg') center/cover no-repeat;
+}
+.btn-overlay{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  padding:12px 28px;border-radius:40px;background:rgba(0,0,0,0.55);
+  border:1px solid rgba(255,255,255,0.28);
+  color:#fff;font-weight:900;font-size:13px;text-decoration:none;
+}
+.campeonato-text{
+  margin-top:18px;
+  font-size:15px;
+  color:rgba(255,255,255,0.85);
+  line-height:1.55;
+}
+
+/* ===== MAIS SOBRE ===== */
+.sobre{
+  padding:55px 20px 10px;
+  text-align:center;
+  max-width:980px;
+  margin:0 auto;
+}
+
+/* 🔥 TÍTULO COM TYPEWRITER */
+#typewriter{
+  font-size:28px;
+  font-weight:950;
+  color:#ffffff;
+  display:inline-block;
+  border-right:2px solid #ffffff;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+/* Cursor piscando */
+@keyframes blinkCursor{
+  0%,50%,100%{border-color:#ffffff;}
+  25%,75%{border-color:transparent;}
+}
+#typewriter.cursor-blink{animation:blinkCursor 1s infinite;}
+
+.sobre p{
+  color:rgba(255,255,255,0.82);
+  line-height:1.7;
+  margin:0 auto 12px;
+  max-width:820px;
+}
+
+/* Botão WhatsApp no MAIS SOBRE (mantém estilo do seu) */
+.btn-whatsapp{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:14px;
+  padding:14px 26px;
+  border-radius:999px;
+  background:#25D366;
+  color:#fff;
+  font-weight:900;
+  text-decoration:none;
+  font-size:14px;
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:0 10px 26px rgba(0,0,0,0.35);
+}
+.btn-whatsapp .dot{
+  width:10px;height:10px;border-radius:999px;
+  background:rgba(255,255,255,0.92);
+  box-shadow:0 0 14px rgba(255,255,255,0.35);
+}
+
+/* ===== SLIDER ===== */
+.slider{overflow:hidden;margin:55px auto 10px;max-width:1100px;}
+.slider-track{
+  display:flex;gap:20px;width:max-content;
+  animation:scroll 25s linear infinite;
+}
+.slide{
+  min-width:280px;height:170px;border-radius:15px;overflow:hidden;
+  border:1px solid rgba(161,0,255,0.4);
+}
 .slide img{width:100%;height:100%;object-fit:cover;}
-@keyframes scrollSlider{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.slider:hover .slider-track{animation-play-state:paused;}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 
-/* CARDS */
-.cards-mini{display:flex;gap:15px;padding:20px;flex-wrap:wrap;}
-.card{flex:1;min-width:260px;background:linear-gradient(160deg,#111,#1c1c1c);border-radius:20px;overflow:hidden;border:1px solid rgba(161,0,255,0.2);}
-.card img{width:100%;height:180px;object-fit:cover;}
-.card-content{padding:18px;text-align:center;}
-.price{margin:10px 0;font-weight:700;font-size:18px;color:#a100ff;}
-.btn-neon{width:100%;padding:12px;border-radius:12px;font-weight:800;border:none;background:linear-gradient(90deg,#6f00ff,#a100ff);color:#fff;cursor:pointer;}
+/* ===== TEXTO SLIDER ===== */
+.slider-caption{
+  text-align:center;font-size:12px;color:rgba(255,255,255,0.7);
+  margin-bottom:40px;
+}
 
-/* CONTADOR */
-.counter-section{
-padding:80px 20px;
-text-align:center;
-background:radial-gradient(circle at center, rgba(140,0,255,0.25) 0%, rgba(20,0,40,0.9) 40%, #000 80%);
-}
-.counter-container{display:flex;justify-content:center;gap:60px;flex-wrap:wrap;}
-.counter-box{text-align:center;}
-.counter-box h2{
-font-size:60px;
-font-weight:900;
-background:linear-gradient(90deg,#8a00ff,#c000ff,#ff00ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-text-shadow:0 0 25px rgba(180,0,255,0.7);
-}
-.counter-box p{margin-top:10px;color:#caa6ff;}
-
-/* REVIEWS */
-.reviews{
-padding:60px 20px;
-background:linear-gradient(180deg,#050008,#12001f);
-text-align:center;
-}
-.reviews-title{
-font-size:30px;
-font-weight:900;
-margin-bottom:40px;
-background:linear-gradient(90deg,#8a00ff,#c000ff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-.review-container{
-display:flex;
-flex-direction:column;
-gap:20px;
+/* ===== AVALIAÇÕES ===== */
+.reviews{padding:60px 20px;text-align:center;}
+.reviews h2{
+  font-size:32px;margin-bottom:40px;font-weight:900;color:#ffffff;
 }
 .review-card{
-background:linear-gradient(180deg,#1a0033,#0d001a);
-padding:22px;
-border-radius:18px;
-box-shadow:0 0 20px rgba(140,0,255,0.2);
-text-align:center;
+  background:rgba(0,0,0,0.72);
+  padding:25px;border-radius:20px;
+  border:1px solid rgba(161,0,255,0.28);
+  margin-bottom:25px;
 }
-.review-card .stars{
-color:#FFD700;
-margin-bottom:10px;
-font-size:22px;
-letter-spacing:3px;
-}
-.review-card p{
-color:#ddd;
-font-size:19px;
-margin-bottom:12px;
-}
-.review-card span{
-display:block;
-color:#a100ff;
-font-weight:700;
-font-size:16px;
-}
+.stars{color:#FFD700;margin-bottom:10px;font-size:20px;letter-spacing:3px;}
+.review-card p{margin-bottom:10px;color:#ddd;}
+.review-card span{color:#a100ff;font-weight:700;}
 
-/* FOOTER */
-footer{text-align:center;padding:30px;background:#000;margin-top:40px;color:#aaa;border-top:2px solid #a100ff;}
-footer a{color:#a100ff;text-decoration:none;font-weight:700;}
-footer a:hover{text-decoration:underline;}
+/* ===== FOOTER ===== */
+footer{
+  text-align:center;padding:30px;background:#000;margin-top:40px;
+  border-top:1px solid #a100ff;
+}
+footer a{color:#a100ff;text-decoration:none;font-weight:800;}
 
-/* WHATSAPP */
-.whatsapp-float{position:fixed;bottom:18px;right:18px;background:#25D366;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+/* ===== WHATSAPP FLOAT ===== */
+.whatsapp-float{
+  position:fixed;bottom:20px;right:20px;background:#25D366;
+  width:60px;height:60px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
 .whatsapp-float img{width:30px;}
-
-@media(max-width:768px){
-.cards-mini{flex-direction:column;}
-}
-
-/* ====== TOPO COMPETIÇÃO WZ (Warzone no lugar do N) ====== */
-.hero-wz{
-margin:50px auto 25px; /* empurra pra baixo por causa da topbar */
-max-width:900px;
-padding:35px 18px;
-border-radius:22px;
-background:radial-gradient(circle at center, rgba(161,0,255,0.28) 0%, rgba(30,0,60,0.75) 45%, rgba(0,0,0,0.95) 100%);
-border:1px solid rgba(161,0,255,0.35);
-box-shadow:0 0 35px rgba(161,0,255,0.22);
-}
-.hero-wz .logo-box{
-display:flex;
-justify-content:center;
-margin-bottom:18px;
-}
-.hero-wz .logo-box img{
-max-width:100%;
-border-radius:18px;
-box-shadow:0 0 40px rgba(161,0,255,0.4);
-}
-.hero-wz .purple-tab{
-display:inline-block;
-padding:14px 36px;
-border-radius:999px;
-font-size:30px;
-font-weight:900;
-letter-spacing:2px;
-color:#fff;
-background:linear-gradient(90deg,#6f00ff,#a100ff,#ff00ff);
-box-shadow:0 0 28px rgba(161,0,255,0.7);
-text-decoration:none; /* remove linha */
-}
-
-.hero-wz .purple-tab:hover{
-text-decoration:none; /* garante que não volta */
-transform:scale(1.05);
-transition:0.2s ease;
-}
-.hero-wz .hero-sub{
-margin-top:14px;
-font-size:16px;
-color:#d9c0ff;
-}
-
-/* ====== TOPBAR + MENU 3 LISTRAS ====== */
-.topbar{
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:54px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 14px;
-background:rgba(255,255,255,0.04);
-backdrop-filter: blur(6px);
-border-bottom:1px solid rgba(161,0,255,0.22);
-}
-
-.topbar .brand{
-display:flex;
-align-items:center;
-gap:10px;
-}
-.topbar .brand img{
-width:32px;
-height:32px;
-border-radius:10px;
-object-fit:cover;
-filter:drop-shadow(0 0 12px rgba(161,0,255,0.55));
-}
-.topbar .brand span{
-font-weight:900;
-letter-spacing:0.5px;
-color:#fff;
-font-size:14px;
-}
-
-/* 3 listras */
-.hamburger{
-width:44px;
-height:44px;
-border:none;
-background:transparent;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-border-radius:12px;
-}
-.hamburger:active{transform:scale(0.98);}
-
-.hamburger-lines{
-width:22px;
-height:16px;
-position:relative;
-}
-.hamburger-lines span{
-position:absolute;
-left:0;
-right:0;
-height:3px;
-border-radius:3px;
-background:#fff;
-box-shadow:0 0 10px rgba(161,0,255,0.35);
-transition:transform .2s ease, top .2s ease, opacity .2s ease;
-}
-.hamburger-lines span:nth-child(1){top:0;}
-.hamburger-lines span:nth-child(2){top:6.5px;}
-.hamburger-lines span:nth-child(3){top:13px;}
-
-/* quando abre vira X */
-.menu-open .hamburger-lines span:nth-child(1){top:6.5px; transform:rotate(45deg);}
-.menu-open .hamburger-lines span:nth-child(2){opacity:0;}
-.menu-open .hamburger-lines span:nth-child(3){top:6.5px; transform:rotate(-45deg);}
-
-/* overlay + menu */
-.menu-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.55);
-opacity:0;
-pointer-events:none;
-transition:opacity .2s ease;
-z-index:9998;
-}
-.menu-drawer{
-position:fixed;
-top:0;
-right:-320px;
-width:300px;
-height:100vh;
-background:linear-gradient(180deg,#12001f,#050008);
-border-left:1px solid rgba(161,0,255,0.22);
-box-shadow:-20px 0 40px rgba(0,0,0,0.5);
-padding:16px;
-transition:right .25s ease;
-z-index:9999;
-}
-.menu-open .menu-overlay{opacity:1; pointer-events:auto;}
-.menu-open .menu-drawer{right:0;}
-
-.menu-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:8px 6px 14px;
-border-bottom:1px solid rgba(161,0,255,0.18);
-margin-bottom:14px;
-}
-.menu-header strong{font-size:15px; letter-spacing:0.5px;}
-.menu-close{
-border:none;
-background:rgba(255,255,255,0.08);
-color:#fff;
-width:42px;
-height:42px;
-border-radius:12px;
-cursor:pointer;
-font-weight:900;
-}
-
-.menu-links a{
-display:block;
-padding:14px 12px;
-border-radius:14px;
-text-decoration:none;
-color:#fff;
-margin-bottom:10px;
-background:rgba(255,255,255,0.06);
-border:1px solid rgba(161,0,255,0.18);
-font-weight:800;
-}
-.menu-links a:hover{
-background:rgba(161,0,255,0.16);
-border-color:rgba(161,0,255,0.35);
-}
-.menu-links a small{
-display:block;
-margin-top:6px;
-color:#caa6ff;
-font-weight:600;
-font-size:12px;
-}
 </style>
 </head>
 
 <body>
 
-<header>
+<div class="topbar">
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="brand">Norbit White</div>
+</div>
 
-  <!-- TOPBAR COM 3 LISTRAS -->
-  <div class="topbar">
-    <div class="brand">
-      <img src="minhalogo.png" alt="Logo">
-      <span>Norbit White</span>
-    </div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-    <button class="hamburger" id="btnMenu" aria-label="Abrir menu">
-      <div class="hamburger-lines">
-        <span></span><span></span><span></span>
-      </div>
-    </button>
+<!-- MENU (AGORA ABRE PELA ESQUERDA) -->
+<div class="menu" id="menu">
+  <a href="politica.html">Política</a>
+  <a href="termos.html">Termos</a>
+  <a href="contato.html">Contato</a>
+  <a href="forma2.html">Feedback</a>
+</div>
+
+<section class="hero">
+  <div class="flyer-container">
+    <a href="campeonato.html" class="btn-overlay">QUERO PARTICIPAR</a>
   </div>
 
-  <!-- COMPETIÇÃO WZ (imagem Warzone no lugar do N) -->
-  <div class="hero-wz">
-    <div class="logo-box">
-      <img src="warzone.jpg" alt="Warzone">
-    </div>
-    <a href="campeonato.html" target="_blank" class="purple-tab">CAMPEONATO</a>
-    <p class="hero-sub">Participe agora e mostre quem domina o Warzone</p>
-  </div>
-
-  <h1>Norbit White Design</h1>
-  <p>Design profissional para quem quer crescer</p>
-
-  <div class="slider">
-    <div class="slider-track">
-      <div class="slide"><img src="slide1.jpg"></div>
-      <div class="slide"><img src="slide2.jpg"></div>
-      <div class="slide"><img src="slide3.jpg"></div>
-      <div class="slide"><img src="slide4.jpg"></div>
-      <div class="slide"><img src="slide1.jpg"></div>
-      <div class="slide"><img src="slide2.jpg"></div>
-    </div>
-  </div>
-</header>
-
-<!-- MENU (abre pelo hambúrguer) -->
-<div class="menu-overlay" id="menuOverlay"></div>
-
-<nav class="menu-drawer" id="menuDrawer" aria-label="Menu">
-  <div class="menu-header">
-    <strong>Menu</strong>
-    <button class="menu-close" id="btnClose" aria-label="Fechar menu">✕</button>
-  </div>
-
-  <div class="menu-links">
-    <a href="politica.html">Política de Privacidade <small>Recomendado pro AdSense</small></a>
-    <a href="termos.html">Termos de Uso <small>Regras e condições</small></a>
-    <a href="contato.html">Contato <small>Fale com você</small></a>
-    <a href="https://wa.me/5521983747028" target="_blank">WhatsApp <small>Atendimento rápido</small></a>
-  </div>
-</nav>
-
-<section class="cards-mini">
-  <div class="card">
-    <img src="banner2.jpg">
-    <div class="card-content">
-      <h2>Criação de Logo</h2>
-      <p>Logo profissional para streamers.</p>
-      <div class="price">R$ 5</div>
-      <button class="btn-neon" onclick="window.location.href='https://wa.me/5521983747028'">CHAMAR NO WHATSAPP</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <img src="banner3.jpg">
-    <div class="card-content">
-      <h2>Banner Gamer</h2>
-      <p>Arte profissional para YouTube e Twitch.</p>
-      <div class="price">R$ 5</div>
-      <button class="btn-neon" onclick="window.location.href='https://wa.me/5521983747028'">CHAMAR NO WHATSAPP</button>
-    </div>
-  </div>
+  <p class="campeonato-text">
+    Clique em <b>Quero Participar</b> para fazer sua inscrição no campeonato.
+  </p>
 </section>
 
-<section class="counter-section">
-  <div class="counter-container">
-    <div class="counter-box">
-      <h2 class="counter" data-target="50">0</h2>
-      <p>Clientes Satisfeitos</p>
-    </div>
-    <div class="counter-box">
-      <h2 class="counter" data-target="200">0</h2>
-      <p>Artes Criadas</p>
-    </div>
-    <div class="counter-box">
-      <h2 class="counter" data-target="5">0</h2>
-      <p>Avaliação Média ⭐</p>
-    </div>
-  </div>
+<section class="sobre">
+  <h2 id="typewriter"></h2>
+  <p>
+    Norbit White Design é focado em criar artes profissionais para streamers e criadores
+    que querem crescer com identidade visual forte.
+  </p>
+
+  <!-- ✅ BOTÃO WHATSAPP NO MAIS SOBRE -->
+  <a class="btn-whatsapp" href="https://wa.me/5521983747028" target="_blank">
+    <span class="dot"></span> FALAR NO WHATSAPP
+  </a>
 </section>
+
+<div class="slider">
+  <div class="slider-track">
+    <div class="slide"><img src="slide1.jpg"></div>
+    <div class="slide"><img src="slide2.jpg"></div>
+    <div class="slide"><img src="slide3.jpg"></div>
+    <div class="slide"><img src="slide4.jpg"></div>
+  </div>
+</div>
+
+<div class="slider-caption">
+  artes feitas pela nossa equipe para Streamers
+</div>
 
 <section class="reviews">
-  <h2 class="reviews-title">AVALIAÇÕES</h2>
-  <div class="review-container">
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Mano, a thumbnail ficou INSANA! Muito profissional.</p>
-      <span>@dutyred</span>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Melhor designer que já contratei! Banner ficou absurdo.</p>
-      <span>@jorjet777</span>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Minha logo ficou profissional demais. Trabalho rápido e de qualidade.</p>
-      <span>@gordinhodocod00</span>
-    </div>
+  <h2>AVALIAÇÕES</h2>
+
+  <!-- ✅ 3 AVALIAÇÕES COM OS NOMES CERTOS -->
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>Mano, a thumbnail ficou INSANA! Muito profissional.</p>
+    <span>@dutyreed</span>
+  </div>
+
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>Minha logo ficou profissional demais. Trabalho rápido e de qualidade.</p>
+    <span>@gordinhodocod00</span>
+  </div>
+
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>Melhor designer que já contratei! Banner ficou absurdo.</p>
+    <span>@jorjet777</span>
   </div>
 </section>
 
 <footer>
-  <a href="politica.html">Política de Privacidade</a> |
-  <a href="termos.html">Termos de Uso</a> |
-  <a href="contato.html">Contato</a>
+  <a href="politica.html">Política</a> |
+  <a href="termos.html">Termos</a> |
+  <a href="contato.html">Contato</a> |
+  <a href="forma2.html">Feedback</a>
   <br><br>
-  © 2026 Norbit White Design - Todos direitos reservados
+  © 2026 Norbit White Design
 </footer>
 
-<a href="https://wa.me/5521983747028" class="whatsapp-float" target="_blank">
+<a class="whatsapp-float" href="https://wa.me/5521983747028" target="_blank">
   <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
 </a>
 
 <script>
-/* contador */
-const counters=document.querySelectorAll('.counter');
-const speed=200;
-counters.forEach(counter=>{
-  const updateCount=()=>{
-    const target=+counter.getAttribute('data-target');
-    const count=+counter.innerText;
-    const inc=target/speed;
-    if(count<target){
-      counter.innerText=Math.ceil(count+inc);
-      setTimeout(updateCount,10);
-    }else{
-      counter.innerText=target;
-    }
-  };
-  updateCount();
-});
+function toggleMenu(){
+  document.getElementById("menu").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
 
-/* menu 3 listras funcionando */
-const btnMenu = document.getElementById('btnMenu');
-const btnClose = document.getElementById('btnClose');
-const overlay = document.getElementById('menuOverlay');
-const drawer = document.getElementById('menuDrawer');
+/* TYPEWRITER */
+const text = "MAIS SOBRE";
+const element = document.getElementById("typewriter");
+let index = 0;
 
-function openMenu(){document.body.classList.add('menu-open');}
-function closeMenu(){document.body.classList.remove('menu-open');}
+function typeEffect(){
+  if(index < text.length){
+    element.textContent += text.charAt(index);
+    index++;
+    setTimeout(typeEffect, 90);
+  } else {
+    element.classList.add("cursor-blink");
+  }
+}
 
-btnMenu.addEventListener('click', () => {
-  if(document.body.classList.contains('menu-open')) closeMenu();
-  else openMenu();
-});
-btnClose.addEventListener('click', closeMenu);
-overlay.addEventListener('click', closeMenu);
-
-/* fecha ao clicar em um link */
-drawer.addEventListener('click', (e)=>{
-  if(e.target.tagName === 'A') closeMenu();
-});
-
-/* fecha no ESC */
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape') closeMenu();
-});
+window.addEventListener("load", typeEffect);
 </script>
 
 </body>
 </html>
-
