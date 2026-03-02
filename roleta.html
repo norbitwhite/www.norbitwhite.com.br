@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta name="monetag" content="6b6f54826ba181e45cba77ab49403b71">
+
 <title>Roleta de Tickets - Norbit White</title>
 
 <style>
@@ -16,97 +18,78 @@ html,body{
   overflow-x:hidden;
 }
 
-/* TOPO */
 .topbar{
   position:fixed;
   top:0; left:0; right:0;
   height:60px;
   display:flex;
   align-items:center;
-  padding:0 18px;
-  background:#000;
+  padding:0 16px;
+  background:rgba(0,0,0,.95);
   border-bottom:1px solid rgba(161,0,255,.25);
   z-index:9999;
 }
-.hamburger{font-size:26px; cursor:pointer;}
+
+.hamburger{
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px; cursor:pointer;
+  border-radius:12px;
+  user-select:none;
+}
+
 .brand{
   position:absolute;
   left:50%;
   transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-weight:900;
 }
 
-/* MENU */
-.overlay{
-  position:fixed;
-  inset:60px 0 0 0;
-  background:rgba(0,0,0,.6);
-  opacity:0;
-  visibility:hidden;
-  transition:.2s;
-  z-index:9997;
-}
-.overlay.active{
-  opacity:1;
-  visibility:visible;
+.brand img{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  border-radius:14px;
 }
 
-.menu{
-  position:fixed;
-  top:60px;
-  left:0;
-  width:82vw;
-  max-width:320px;
-  height:calc(100vh - 60px);
-  background:#120022;
-  padding:15px;
-  transform:translateX(-110%);
-  transition:.25s;
-  z-index:9998;
-}
-.menu.active{
-  transform:translateX(0);
-}
-.menu a{
-  display:block;
-  padding:16px;
-  margin:12px 0;
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  color:#fff;
-  text-decoration:none;
-  font-weight:900;
-}
-
-/* CONTEÚDO */
 .wrap{
-  padding-top:100px;
+  padding-top:95px;
   text-align:center;
 }
 
+/* título menor */
 h1{
-  font-size:26px;
+  font-size:24px;
   font-weight:900;
+  letter-spacing:1px;
   margin-bottom:6px;
 }
 
 .sub{
   color:rgba(255,255,255,.7);
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
+/* roleta menor + borda */
 .wheel-area{
   position:relative;
-  width:240px;
-  height:240px;
-  margin:0 auto 20px;
+  width:min(240px,85vw);
+  height:min(240px,85vw);
+  margin:0 auto 18px;
   border-radius:50%;
   padding:10px;
+
   background:
     linear-gradient(#000,#000) padding-box,
     linear-gradient(135deg,#6f00ff,#ff00ff) border-box;
+
   border:4px solid transparent;
-  box-shadow:0 0 20px rgba(161,0,255,.35);
+  box-shadow:
+    0 0 20px rgba(161,0,255,.30),
+    inset 0 0 12px rgba(255,255,255,.05);
 }
 
 .pointer{
@@ -118,6 +101,7 @@ h1{
   border-left:10px solid transparent;
   border-right:10px solid transparent;
   border-bottom:18px solid #fff;
+  z-index:10;
 }
 
 canvas{
@@ -134,11 +118,13 @@ canvas{
   color:#fff;
   font-weight:900;
   cursor:pointer;
+  margin:10px;
 }
+.btn:disabled{opacity:.6; cursor:not-allowed;}
 
 .stat{
-  margin-top:15px;
-  font-size:18px;
+  margin-top:12px;
+  font-size:16px;
   font-weight:900;
 }
 
@@ -151,20 +137,151 @@ canvas{
   border-radius:999px;
   overflow:hidden;
 }
+
 .bar{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#6f00ff,#ff00ff);
-  transition:.3s;
+  transition:.25s;
 }
 
 footer{
-  margin-top:40px;
-  padding:20px;
+  margin-top:36px;
+  padding:18px;
   border-top:1px solid rgba(161,0,255,.25);
   font-size:13px;
   color:rgba(255,255,255,.6);
   text-align:center;
+}
+
+/* ===== MENU (sem “faixa” lateral bugada) ===== */
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:9997;
+}
+
+.menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:250px;
+  height:100vh;
+  padding:80px 18px 18px;
+  background:#0a0014;
+  border-right:1px solid rgba(161,0,255,.30);
+  transform:translateX(-110%);
+  transition:transform .25s ease;
+  z-index:9998;
+}
+
+.menu.open{ transform:translateX(0); }
+.menu-overlay.open{ opacity:1; pointer-events:auto; }
+
+.menu a{
+  display:block;
+  padding:12px 12px;
+  border-radius:14px;
+  margin-bottom:10px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:900;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(161,0,255,.18);
+}
+
+.menu a:hover{ background:rgba(161,0,255,.14); }
+
+/* ===== MODAL FORM (libera após 50) ===== */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:10000;
+}
+
+.modal.show{ display:flex; }
+
+.modal-card{
+  width:100%;
+  max-width:520px;
+  background:#0b0b10;
+  border:1px solid rgba(161,0,255,.22);
+  border-radius:18px;
+  padding:18px;
+  text-align:left;
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+.modal-head img{
+  width:50px;height:50px;
+  border-radius:14px;
+  object-fit:cover;
+}
+.modal-title{
+  font-weight:900;
+  font-size:16px;
+}
+.modal-sub{
+  margin-top:6px;
+  color:rgba(255,255,255,.75);
+  font-size:13px;
+  line-height:1.4;
+}
+
+label{
+  display:block;
+  margin:12px 0 6px;
+  font-size:13px;
+  color:rgba(255,255,255,.85);
+  font-weight:800;
+}
+
+input, textarea{
+  width:100%;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.25);
+  color:#fff;
+  padding:12px;
+  outline:none;
+  box-sizing:border-box;
+}
+textarea{ min-height:90px; resize:vertical; }
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+
+.modal-actions .btn{
+  margin:0;
+  flex:1;
+}
+
+.btn-sec{
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+}
+
+.small-note{
+  margin-top:10px;
+  font-size:12px;
+  color:rgba(255,255,255,.65);
 }
 </style>
 </head>
@@ -172,21 +289,22 @@ footer{
 <body>
 
 <div class="topbar">
-  <div class="hamburger" id="hamburger">☰</div>
+  <div class="hamburger" id="btnMenu">☰</div>
+
   <div class="brand">
-  <img src="logo400.jpg" style="height:58px;">
-</div>
+    <img src="logo400.jpg" alt="Norbit White">
+  </div>
 </div>
 
-<div class="overlay" id="overlay"></div>
-
-<div class="menu" id="menu">
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="menu" id="menu">
   <a href="index.html">Início</a>
   <a href="campeonato.html">Campeonato</a>
-  <a href="roleta.html">Roleta</a>
+  <a href="forma2.html">Feedback</a>
+  <a href="politica.html">Política</a>
   <a href="termos.html">Termos</a>
-  <a href="politica.html">Privacidade</a>
-</div>
+  <a href="contato.html">Contato</a>
+</nav>
 
 <div class="wrap">
   <h1>ROLETA DE TICKETS</h1>
@@ -205,134 +323,352 @@ footer{
     <div class="bar" id="bar"></div>
   </div>
 
-  <p style="font-size:13px;">
-    Junte <b>50 tickets</b> e desbloqueie:<br>
+  <p style="font-size:13px;opacity:.85;line-height:1.35;">
+    Junte <b>50 tickets</b> e desbloqueie seu prêmio:<br>
     <b>UMA LOGO + UM BANNER + UMA THUMBNAIL</b>
   </p>
 </div>
 
-<footer>© 2026 Norbit White Design</footer>
+<footer>
+  © 2026 Norbit White Design
+</footer>
+
+<!-- ===== MODAL: FORMSPREE (só abre com 50+) ===== -->
+<div class="modal" id="rewardModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <img src="logo400.jpg" alt="Norbit White">
+      <div>
+        <div class="modal-title">PRÊMIO DESBLOQUEADO ✅</div>
+        <div class="modal-sub">
+          Você bateu <b>50 tickets</b>! Preencha como você quer sua <b>Logo</b>, <b>Banner</b> e <b>Thumbnail</b>.
+          <br>Após enviar, a contagem será <b>zerada automaticamente</b>.
+        </div>
+      </div>
+    </div>
+
+    <!-- Formspree (o seu) -->
+    <form id="rewardForm" action="https://formspree.io/f/xnjbwvkd" method="POST">
+      <label>Email (opcional)</label>
+      <input type="email" name="email" placeholder="Escreva seu email (opcional)">
+
+      <label>WhatsApp (opcional)</label>
+      <input type="text" name="whatsapp" placeholder="Escreva seu número (opcional)">
+
+      <label>Como você quer sua LOGO?</label>
+      <textarea name="logo_pedido" placeholder="Ex: cores, estilo, letra, referência..."></textarea>
+
+      <label>Como você quer seu BANNER?</label>
+      <textarea name="banner_pedido" placeholder="Ex: tema, textos, tamanho, referências..."></textarea>
+
+      <label>Como você quer sua THUMBNAIL?</label>
+      <textarea name="thumbnail_pedido" placeholder="Ex: tema, estilo, título, referências..."></textarea>
+
+      <!-- info extra -->
+      <input type="hidden" name="tickets_atingidos" id="hiddenTickets">
+      <input type="hidden" name="origem" value="Roleta - Norbit White">
+
+      <div class="modal-actions">
+        <button type="submit" class="btn" id="sendReward">ENVIAR PEDIDO</button>
+        <button type="button" class="btn btn-sec" id="closeReward">FECHAR</button>
+      </div>
+
+      <div class="small-note" id="rewardStatus"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ✅ Script do anúncio (como você pediu) -->
+<script>
+(function(s){
+  s.dataset.zone='10671343';
+  s.src='https://al5sm.com/tag.min.js';
+})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+</script>
 
 <script>
-/* MENU */
+/* =========================
+   MENU HAMBÚRGUER (funciona)
+   ========================= */
+const btnMenu = document.getElementById("btnMenu");
 const menu = document.getElementById("menu");
-const overlay = document.getElementById("overlay");
-document.getElementById("hamburger").onclick = ()=>{
-  menu.classList.toggle("active");
-  overlay.classList.toggle("active");
-};
-overlay.onclick = ()=>{
-  menu.classList.remove("active");
-  overlay.classList.remove("active");
-};
+const menuOverlay = document.getElementById("menuOverlay");
 
-/* SALVAMENTO */
-const STORAGE_KEY="nw_roleta";
-let saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
-let tickets=saved.tickets||0;
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify({tickets}))}
+function openMenu(){ menu.classList.add("open"); menuOverlay.classList.add("open"); }
+function closeMenu(){ menu.classList.remove("open"); menuOverlay.classList.remove("open"); }
 
-/* ROLETA */
-const canvas=document.getElementById("wheel");
-const ctx=canvas.getContext("2d");
+btnMenu.addEventListener("click", ()=>{
+  if(menu.classList.contains("open")) closeMenu();
+  else openMenu();
+});
+menuOverlay.addEventListener("click", closeMenu);
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeMenu(); });
 
-const prizes=[
-  {label:"2 TICKETS",value:2,color:"#6f00ff"},
-  {label:"3 TICKETS",value:3,color:"#ff00ff"},
-  {label:"5 TICKETS",value:5,color:"#6f00ff"},
-  {label:"7 TICKETS",value:7,color:"#ff00ff"},
-  {label:"2 TICKETS",value:2,color:"#6f00ff"},
-  {label:"3 TICKETS",value:3,color:"#ff00ff"},
-  {label:"5 TICKETS",value:5,color:"#6f00ff"},
-  {label:"7 TICKETS",value:7,color:"#ff00ff"},
+/* =========================
+   ROLETA (NÃO BAGUNÇA)
+   ========================= */
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+const prizes = [
+  {label:"2 TICKETS", value:2, color:"#6f00ff"},
+  {label:"3 TICKETS", value:3, color:"#ff00ff"},
+  {label:"5 TICKETS", value:5, color:"#6f00ff"},
+  {label:"7 TICKETS", value:7, color:"#ff00ff"},
+  {label:"2 TICKETS", value:2, color:"#6f00ff"},
+  {label:"3 TICKETS", value:3, color:"#ff00ff"},
+  {label:"5 TICKETS", value:5, color:"#6f00ff"},
+  {label:"7 TICKETS", value:7, color:"#ff00ff"},
 ];
 
-let angle=0;
-let spinning=false;
-let adLoaded=false;
+const spinBtn = document.getElementById("spinBtn");
+const ticketsText = document.getElementById("ticketsText");
+const bar = document.getElementById("bar");
 
+/* ✅ salvamento */
+const LS_TICKETS = "nw_roleta_tickets";
+const LS_SPINS   = "nw_roleta_spins";
+const LS_LOCK    = "nw_roleta_lock_reward"; // trava giro até enviar form
+
+let tickets = Number(localStorage.getItem(LS_TICKETS) || 0);
+let spinsCount = Number(localStorage.getItem(LS_SPINS) || 0);
+let lockReward = (localStorage.getItem(LS_LOCK) === "1");
+
+let angle = 0;
+let spinning = false;
+
+/* =========================
+   SOM (leve)
+   ========================= */
+let audioCtx = null;
+let tickTimer = null;
+
+function ensureAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === "suspended") audioCtx.resume();
+}
+
+function playTick(){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = "square";
+  o.frequency.value = 820;
+  g.gain.value = 0.035;
+  o.connect(g); g.connect(audioCtx.destination);
+  const t = audioCtx.currentTime;
+  g.gain.setValueAtTime(0.035, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+  o.start(t); o.stop(t + 0.03);
+}
+
+function playDing(){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = "sine";
+  o.frequency.value = 1200;
+  g.gain.value = 0.06;
+  o.connect(g); g.connect(audioCtx.destination);
+  const t = audioCtx.currentTime;
+  g.gain.setValueAtTime(0.06, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+  o.start(t); o.stop(t + 0.22);
+}
+
+function startTicking(){
+  stopTicking();
+  tickTimer = setInterval(playTick, 75);
+  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 95);} }, 1200);
+  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 125);} }, 2600);
+  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 160);} }, 3600);
+}
+
+function stopTicking(){
+  if(tickTimer){ clearInterval(tickTimer); tickTimer=null; }
+}
+
+/* =========================
+   DESENHO
+   ========================= */
 function draw(){
-  const W=canvas.width;
-  const H=canvas.height;
-  const cx=W/2;
-  const cy=H/2;
-  const r=W*0.42;
-  const slice=(Math.PI*2)/prizes.length;
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const r = W*0.42;
+  const slice = (Math.PI*2)/prizes.length;
+
   ctx.clearRect(0,0,W,H);
+
   ctx.save();
   ctx.translate(cx,cy);
   ctx.rotate(angle);
+
   for(let i=0;i<prizes.length;i++){
-    const start=i*slice;
-    const end=start+slice;
+    const start = i*slice;
+    const end = start + slice;
+
     ctx.beginPath();
     ctx.moveTo(0,0);
     ctx.arc(0,0,r,end,start,true);
     ctx.closePath();
-    ctx.fillStyle=prizes[i].color;
+    ctx.fillStyle = prizes[i].color;
     ctx.fill();
+
+    // texto acompanhando a roleta (deitado)
     ctx.save();
-    ctx.rotate(start+slice/2);
-    ctx.fillStyle="#fff";
-    ctx.font="bold 20px Arial";
-    ctx.textAlign="center";
-    ctx.fillText(prizes[i].label,r*0.65,0);
+    const mid = start + slice/2;
+    ctx.rotate(mid);
+
+    ctx.font = "900 24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "rgba(0,0,0,.6)";
+    ctx.strokeText(prizes[i].label, r*0.65, 0);
+
+    ctx.fillStyle = "#fff";
+    ctx.fillText(prizes[i].label, r*0.65, 0);
+
     ctx.restore();
   }
+
   ctx.restore();
 }
 
-function updateUI(){
-  document.getElementById("ticketsText").innerText="Tickets acumulados: "+tickets;
-  document.getElementById("bar").style.width=Math.min((tickets/50)*100,100)+"%";
-  save();
+function easeOut(t){ return 1 - Math.pow(1-t,3); }
+
+/* =========================
+   UI + salvamento
+   ========================= */
+function saveState(){
+  localStorage.setItem(LS_TICKETS, String(tickets));
+  localStorage.setItem(LS_SPINS, String(spinsCount));
+  localStorage.setItem(LS_LOCK, lockReward ? "1" : "0");
 }
 
-function spin(){
-  if(spinning) return;
-  spinning=true;
+function updateUI(){
+  ticketsText.textContent = "Tickets acumulados: " + tickets;
+  const pct = Math.min((tickets/50)*100,100);
+  bar.style.width = pct + "%";
 
-  const idx=Math.floor(Math.random()*prizes.length);
-  const slice=(Math.PI*2)/prizes.length;
-  const target=(Math.PI*2*6)-(idx*slice+slice/2);
-  const start=angle;
-  const duration=4000;
-  const startTime=performance.now();
+  // se travado por prêmio, desabilita giro
+  if(lockReward){
+    spinBtn.disabled = true;
+  }else{
+    spinBtn.disabled = false;
+  }
+}
+
+/* =========================
+   PRÊMIO 50+ (Formspree)
+   ========================= */
+const rewardModal = document.getElementById("rewardModal");
+const rewardForm = document.getElementById("rewardForm");
+const closeReward = document.getElementById("closeReward");
+const rewardStatus = document.getElementById("rewardStatus");
+const hiddenTickets = document.getElementById("hiddenTickets");
+
+function openReward(){
+  lockReward = true;
+  saveState();
+  updateUI();
+
+  hiddenTickets.value = String(tickets);
+  rewardStatus.textContent = "";
+  rewardModal.classList.add("show");
+  rewardModal.setAttribute("aria-hidden","false");
+}
+
+function closeRewardModal(){
+  rewardModal.classList.remove("show");
+  rewardModal.setAttribute("aria-hidden","true");
+}
+
+closeReward.addEventListener("click", ()=> closeRewardModal());
+
+// quando já está >=50 ao carregar (caso acumulou antes)
+function checkReward(){
+  if(tickets >= 50){
+    openReward();
+  }
+}
+
+/* Ao enviar: zera tickets + spins e destrava giro */
+rewardForm.addEventListener("submit", ()=>{
+  rewardStatus.textContent = "Enviando...";
+
+  // ZERA após enviar (como você pediu)
+  tickets = 0;
+  spinsCount = 0;
+  lockReward = false;
+  saveState();
+  updateUI();
+
+  rewardStatus.textContent = "Enviado ✅ Tickets zerados! Você já pode girar novamente.";
+  setTimeout(()=> closeRewardModal(), 900);
+});
+
+/* =========================
+   GIRO (sem bug)
+   ========================= */
+function spin(){
+  if(spinning || lockReward) return;
+  spinning = true;
+  spinBtn.disabled = true;
+
+  const idx = Math.floor(Math.random()*prizes.length);
+  const slice = (Math.PI*2)/prizes.length;
+  const targetMid = idx*slice + slice/2;
+  const final = (Math.PI*2*6) - targetMid;
+
+  const startAngle = angle;
+  const duration = 4500;
+  const start = performance.now();
+
+  startTicking();
 
   function animate(now){
-    let t=(now-startTime)/duration;
-    if(t>1)t=1;
-    angle=start+(target-start)*(1-Math.pow(1-t,3));
+    const t = (now-start)/duration;
+    const p = easeOut(Math.min(1,t));
+    angle = startAngle + (final-startAngle)*p;
     draw();
-    if(t<1){
+
+    if(t < 1){
       requestAnimationFrame(animate);
     }else{
-      tickets+=prizes[idx].value;
+      stopTicking();
+      playDing();
+
+      tickets += prizes[idx].value;
+      spinsCount += 1;
+      saveState();
       updateUI();
-      spinning=false;
+
+      spinning = false;
+
+      // ✅ se bateu 50 ou mais, abre o form
+      if(tickets >= 50){
+        openReward();
+      }else{
+        spinBtn.disabled = false;
+      }
     }
   }
+
   requestAnimationFrame(animate);
 }
 
-function showAd(){
-  if(!adLoaded){
-    const s=document.createElement("script");
-    s.dataset.zone="10671343";
-    s.src="https://al5sm.com/tag.min.js";
-    document.body.appendChild(s);
-    adLoaded=true;
-  }
-}
-
-/* BOTÃO */
-document.getElementById("spinBtn").onclick=()=>{
-  showAd();
+/* Clique no botão GIRAR */
+spinBtn.addEventListener("click", ()=>{
+  ensureAudio();
   spin();
-};
+});
 
+/* init */
 draw();
 updateUI();
+checkReward();
 </script>
 
 </body>
