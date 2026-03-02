@@ -41,23 +41,35 @@ body::after{
 }
 
 /* ✅ Partículas caindo */
-.particles{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-4;
-  overflow:hidden;
-}
 .particles span{
   position:absolute;
   top:-20px;
-  width:2px;
+  width:1px;                       
   height:12px;
-  background:rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.28);  /* mais branco */
   border-radius:999px;
-  filter:blur(.2px);
+  filter:blur(.3px);
+  box-shadow:0 0 8px rgba(255,255,255,0.55); /* brilho branco mais forte */
   animation:fall linear infinite;
-  will-change:transform;
+}
+
+.particles span:nth-child(odd){
+  background:rgba(255,255,255,0.22);  /* mantém branco também */
+  box-shadow:0 0 8px rgba(255,255,255,0.45);
+}
+
+.particles span:nth-child(odd){
+  background:rgba(161,0,255,0.32);
+  box-shadow:0 0 14px rgba(161,0,255,0.6);
+}
+
+.particles span:nth-child(odd){
+  background:rgba(161,0,255,0.28); 
+  box-shadow:0 0 12px rgba(161,0,255,0.55);
+}
+
+.particles span:nth-child(odd){
+  background:rgba(161,0,255,0.12); /* roxo bem discreto */
 }
 .particles span:nth-child(odd){
   background:rgba(161,0,255,0.14);
