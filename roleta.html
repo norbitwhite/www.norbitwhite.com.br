@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="monetag" content="6b6f54826ba181e45cba77ab49403b71">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="monetag" content="6b6f54826ba181e45cba77ab49403b71" />
 <title>Roleta de Tickets - Norbit White</title>
 
 <style>
@@ -16,8 +14,73 @@ html,body{
   color:#fff;
   font-family:Arial, sans-serif;
   overflow-x:hidden;
+  height:100%;
 }
 
+/* ===== FUNDO CINEMA ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url('flyer2.jpg') center/cover no-repeat;
+  transform:scale(1.06);
+  filter:blur(1px) brightness(0.55);
+  opacity:0.92;
+  z-index:-6;
+  animation:cameraMove 30s ease-in-out infinite alternate;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  background:
+    linear-gradient(120deg,
+      transparent 47%,
+      rgba(140,0,255,0.06) 49%,
+      rgba(255,0,255,0.08) 50%,
+      rgba(140,0,255,0.06) 51%,
+      transparent 53%
+    ),
+    rgba(0,0,0,0.86);
+  background-size:220% 220%;
+  z-index:-5;
+  animation:energyFlow 22s linear infinite;
+}
+@keyframes cameraMove{
+  0%{transform:scale(1.06);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1.06);}
+}
+@keyframes energyFlow{
+  0%{background-position:0% 50%;}
+  100%{background-position:220% 50%;}
+}
+
+/* ===== PARTÍCULAS (igual index) ===== */
+.particles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-4;
+  overflow:hidden;
+}
+.particles span{
+  position:absolute;
+  top:-20px;
+  width:2px;
+  height:12px;
+  background:rgba(255,255,255,0.18);
+  border-radius:999px;
+  filter:blur(.2px);
+  animation:fall linear infinite;
+  will-change:transform;
+}
+.particles span:nth-child(odd){
+  background:rgba(161,0,255,0.14);
+}
+@keyframes fall{ to{ transform:translateY(120vh); } }
+
+/* ===== TOPBAR + HAMBURGUER ===== */
 .topbar{
   position:fixed;
   top:0; left:0; right:0;
@@ -29,69 +92,137 @@ html,body{
   border-bottom:1px solid rgba(161,0,255,.25);
   z-index:9999;
 }
-
 .hamburger{
   width:42px;height:42px;
   display:flex;align-items:center;justify-content:center;
-  font-size:26px; cursor:pointer;
+  font-size:26px;
+  cursor:pointer;
   border-radius:12px;
   user-select:none;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(161,0,255,.18);
 }
-
 .brand{
   position:absolute;
   left:50%;
   transform:translateX(-50%);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
 }
-
 .brand img{
   width:60px;
   height:60px;
-  object-fit:cover;
   border-radius:14px;
+  object-fit:cover;
+}
+/* ===== MENU NOVO (igual o do print do Index “bonitão”) ===== */
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  z-index:9997;
 }
 
+/* container do menu (cards grandes) */
+.menu{
+  position:fixed;
+  top:72px;                 /* abaixo da topbar */
+  left:50%;
+  transform:translateX(-50%) translateY(-12px);
+  width:min(92vw,520px);
+  padding:18px;
+  border-radius:22px;
+
+  background:rgba(20, 0, 35, .72);
+  border:1px solid rgba(161,0,255,.22);
+  box-shadow:0 22px 60px rgba(0,0,0,.55);
+
+  opacity:0;
+  pointer-events:none;
+  transition:.22s ease;
+  z-index:9998;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.menu.open{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateX(-50%) translateY(0);
+}
+
+.menu a{
+  display:block;
+  padding:18px 18px;
+  margin:12px 0;
+  border-radius:18px;
+
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  font-size:20px;
+
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 0 0 1px rgba(161,0,255,.10);
+}
+
+.menu a:active{
+  transform:scale(.995);
+}
+
+.menu-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* opcional: deixa o hamburger com “caixinha” igual */
+.hamburger{
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  cursor:pointer;
+  border-radius:12px;
+  user-select:none;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(161,0,255,.18);
+}
+/* ===== LAYOUT LIMPO ===== */
 .wrap{
   padding-top:95px;
+  padding-bottom:50px;
   text-align:center;
 }
-
-/* título menor */
 h1{
-  font-size:24px;
+  font-size:28px;
   font-weight:900;
-  letter-spacing:1px;
-  margin-bottom:6px;
+  background:linear-gradient(90deg,#a100ff,#ff00cc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin:0 0 8px;
 }
-
 .sub{
-  color:rgba(255,255,255,.7);
-  margin-bottom:18px;
+  opacity:.75;
+  margin:0 0 22px;
+  font-size:13px;
+  line-height:1.35;
 }
 
-/* roleta menor + borda */
 .wheel-area{
   position:relative;
-  width:min(240px,85vw);
-  height:min(240px,85vw);
+  width:min(260px,85vw);
+  height:min(260px,85vw);
   margin:0 auto 18px;
   border-radius:50%;
   padding:10px;
-
   background:
     linear-gradient(#000,#000) padding-box,
     linear-gradient(135deg,#6f00ff,#ff00ff) border-box;
-
   border:4px solid transparent;
-  box-shadow:
-    0 0 20px rgba(161,0,255,.30),
-    inset 0 0 12px rgba(255,255,255,.05);
+  box-shadow:0 0 25px rgba(161,0,255,.4);
 }
-
 .pointer{
   position:absolute;
   top:-14px;
@@ -103,100 +234,59 @@ h1{
   border-bottom:18px solid #fff;
   z-index:10;
 }
-
-canvas{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-}
+canvas{ width:100%; height:100%; border-radius:50%; }
 
 .btn{
-  padding:12px 26px;
+  padding:14px 36px;
   border:none;
   border-radius:999px;
-  background:linear-gradient(90deg,#6f00ff,#a100ff);
+  background:linear-gradient(90deg,#6f00ff,#ff00ff);
   color:#fff;
   font-weight:900;
   cursor:pointer;
-  margin:10px;
+  box-shadow:0 12px 30px rgba(161,0,255,.4);
 }
-.btn:disabled{opacity:.6; cursor:not-allowed;}
+.btn:disabled{opacity:.55; cursor:not-allowed;}
 
 .stat{
   margin-top:12px;
   font-size:16px;
   font-weight:900;
 }
-
 .progress{
   width:90%;
-  max-width:420px;
-  height:8px;
+  max-width:520px;
+  height:10px;
   background:#222;
-  margin:12px auto;
+  margin:14px auto 0;
   border-radius:999px;
   overflow:hidden;
 }
-
 .bar{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#6f00ff,#ff00ff);
-  transition:.25s;
+  transition:.3s;
 }
-
-footer{
-  margin-top:36px;
-  padding:18px;
-  border-top:1px solid rgba(161,0,255,.25);
+.note{
+  margin:14px auto 0;
   font-size:13px;
-  color:rgba(255,255,255,.6);
+  opacity:.85;
+  line-height:1.4;
+  max-width:520px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  margin-top:30px;
+  padding:20px;
+  border-top:1px solid rgba(161,0,255,.25);
   text-align:center;
+  opacity:.7;
+  font-size:13px;
 }
 
-/* ===== MENU (sem “faixa” lateral bugada) ===== */
-.menu-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  opacity:0;
-  pointer-events:none;
-  transition:.2s;
-  z-index:9997;
-}
-
-.menu{
-  position:fixed;
-  top:0;
-  left:0;
-  width:250px;
-  height:100vh;
-  padding:80px 18px 18px;
-  background:#0a0014;
-  border-right:1px solid rgba(161,0,255,.30);
-  transform:translateX(-110%);
-  transition:transform .25s ease;
-  z-index:9998;
-}
-
-.menu.open{ transform:translateX(0); }
-.menu-overlay.open{ opacity:1; pointer-events:auto; }
-
-.menu a{
-  display:block;
-  padding:12px 12px;
-  border-radius:14px;
-  margin-bottom:10px;
-  text-decoration:none;
-  color:#fff;
-  font-weight:900;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(161,0,255,.18);
-}
-
-.menu a:hover{ background:rgba(161,0,255,.14); }
-
-/* ===== MODAL FORM (libera após 50) ===== */
+/* ===== MODAIS ===== */
 .modal{
   position:fixed;
   inset:0;
@@ -207,7 +297,6 @@ footer{
   padding:18px;
   z-index:10000;
 }
-
 .modal.show{ display:flex; }
 
 .modal-card{
@@ -218,8 +307,8 @@ footer{
   border-radius:18px;
   padding:18px;
   text-align:left;
+  box-shadow:0 22px 60px rgba(0,0,0,.55);
 }
-
 .modal-head{
   display:flex;
   align-items:center;
@@ -231,25 +320,32 @@ footer{
   border-radius:14px;
   object-fit:cover;
 }
-.modal-title{
-  font-weight:900;
-  font-size:16px;
-}
+.modal-title{ font-weight:900; font-size:16px; }
 .modal-sub{
   margin-top:6px;
-  color:rgba(255,255,255,.75);
+  color:rgba(255,255,255,.78);
   font-size:13px;
   line-height:1.4;
+}
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.modal-actions .btn{ flex:1; padding:12px 18px; }
+.btn-sec{
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:none;
 }
 
 label{
   display:block;
   margin:12px 0 6px;
   font-size:13px;
-  color:rgba(255,255,255,.85);
-  font-weight:800;
+  color:rgba(255,255,255,.90);
+  font-weight:900;
 }
-
 input, textarea{
   width:100%;
   border-radius:12px;
@@ -261,41 +357,54 @@ input, textarea{
   box-sizing:border-box;
 }
 textarea{ min-height:90px; resize:vertical; }
-
-.modal-actions{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-}
-
-.modal-actions .btn{
-  margin:0;
-  flex:1;
-}
-
-.btn-sec{
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.14);
-}
-
 .small-note{
   margin-top:10px;
   font-size:12px;
-  color:rgba(255,255,255,.65);
+  color:rgba(255,255,255,.70);
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce){
+  body::before,body::after{animation:none!important;}
+  .particles span{animation:none!important;}
 }
 </style>
 </head>
 
 <body>
 
+<!-- Partículas -->
+<div class="particles" aria-hidden="true">
+  <span style="left:4%;  animation-duration:7s;  animation-delay:-1s;"></span>
+  <span style="left:9%;  animation-duration:9s;  animation-delay:-3s;"></span>
+  <span style="left:14%; animation-duration:8s;  animation-delay:-5s;"></span>
+  <span style="left:19%; animation-duration:10s; animation-delay:-2s;"></span>
+  <span style="left:24%; animation-duration:7.5s;animation-delay:-6s;"></span>
+  <span style="left:29%; animation-duration:9.5s;animation-delay:-4s;"></span>
+  <span style="left:34%; animation-duration:8.8s;animation-delay:-1s;"></span>
+  <span style="left:39%; animation-duration:11s; animation-delay:-7s;"></span>
+  <span style="left:44%; animation-duration:7.8s;animation-delay:-2s;"></span>
+  <span style="left:49%; animation-duration:9.2s;animation-delay:-5s;"></span>
+  <span style="left:54%; animation-duration:10.5s;animation-delay:-3s;"></span>
+  <span style="left:59%; animation-duration:8.2s;animation-delay:-6s;"></span>
+  <span style="left:64%; animation-duration:9.8s;animation-delay:-1s;"></span>
+  <span style="left:69%; animation-duration:7.9s;animation-delay:-4s;"></span>
+  <span style="left:74%; animation-duration:10.8s;animation-delay:-2s;"></span>
+  <span style="left:79%; animation-duration:8.6s;animation-delay:-7s;"></span>
+  <span style="left:84%; animation-duration:9.6s;animation-delay:-3s;"></span>
+  <span style="left:89%; animation-duration:7.4s;animation-delay:-5s;"></span>
+  <span style="left:94%; animation-duration:11.2s;animation-delay:-1s;"></span>
+</div>
+
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="hamburger" id="btnMenu">☰</div>
-
   <div class="brand">
-    <img src="logo400.jpg" alt="Norbit White">
+    <img src="logo400.jpg" alt="Norbit White" />
   </div>
 </div>
 
+<!-- MENU -->
 <div class="menu-overlay" id="menuOverlay"></div>
 <nav class="menu" id="menu">
   <a href="index.html">Início</a>
@@ -306,9 +415,10 @@ textarea{ min-height:90px; resize:vertical; }
   <a href="contato.html">Contato</a>
 </nav>
 
+<!-- CONTEÚDO -->
 <div class="wrap">
   <h1>ROLETA DE TICKETS</h1>
-  <p class="sub">Gire e acumule tickets até bater a meta.</p>
+  <p class="sub">Para girar, você precisa ver o anúncio. Acumule até <b>50</b> tickets para liberar o prêmio.</p>
 
   <div class="wheel-area">
     <div class="pointer"></div>
@@ -323,17 +433,31 @@ textarea{ min-height:90px; resize:vertical; }
     <div class="bar" id="bar"></div>
   </div>
 
-  <p style="font-size:13px;opacity:.85;line-height:1.35;">
-    Junte <b>50 tickets</b> e desbloqueie seu prêmio:<br>
-    <b>UMA LOGO + UM BANNER + UMA THUMBNAIL</b>
+  <p class="note">
+    Chegue a <b>50 tickets</b> e resgate o prêmio:<br> 1 Logo Marca + 1 Thumbnail
   </p>
 </div>
 
-<footer>
-  © 2026 Norbit White Design
-</footer>
+<footer>© 2026 Norbit White Design</footer>
 
-<!-- ===== MODAL: FORMSPREE (só abre com 50+) ===== -->
+<!-- ===== MODAL: ANÚNCIO ===== -->
+<div class="modal" id="adModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-title">VER ANÚNCIO PARA GIRAR ✅</div>
+    <div class="modal-sub" id="adText">
+      Clique em <b>VER ANÚNCIO</b>. Após carregar, aguarde alguns segundos para liberar o giro.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="watchAdBtn">VER ANÚNCIO</button>
+      <button class="btn btn-sec" id="closeAdBtn" type="button">FECHAR</button>
+    </div>
+
+    <div class="small-note" id="adStatus"></div>
+  </div>
+</div>
+
+<!-- ===== MODAL: FORMSPREE ===== -->
 <div class="modal" id="rewardModal" aria-hidden="true">
   <div class="modal-card">
     <div class="modal-head">
@@ -341,30 +465,27 @@ textarea{ min-height:90px; resize:vertical; }
       <div>
         <div class="modal-title">PRÊMIO DESBLOQUEADO ✅</div>
         <div class="modal-sub">
-          Você bateu <b>50 tickets</b>! Preencha como você quer sua <b>Logo</b>, <b>Banner</b> e <b>Thumbnail</b>.
-          <br>Após enviar, a contagem será <b>zerada automaticamente</b>.
+          Você atingiu <b>50 tickets</b>. Preencha como você quer sua <b>Logo</b>, <b>Banner</b> e <b>Thumbnail</b>.
         </div>
       </div>
     </div>
 
-    <!-- Formspree (o seu) -->
     <form id="rewardForm" action="https://formspree.io/f/xnjbwvkd" method="POST">
       <label>Email (opcional)</label>
-      <input type="email" name="email" placeholder="Escreva seu email (opcional)">
+      <input type="email" name="email" placeholder="Seu email (opcional)">
 
       <label>WhatsApp</label>
-      <input type="text" name="whatsapp" placeholder="Escreva seu número">
+      <input type="text" name="whatsapp" placeholder="Seu número">
 
       <label>Como você quer sua LOGO?</label>
-      <textarea name="logo_pedido" placeholder="Ex: cores, estilo, letra, referência..."></textarea>
+      <textarea name="logo_pedido" placeholder="Cores, estilo, referência..."></textarea>
 
       <label>Como você quer seu BANNER?</label>
-      <textarea name="banner_pedido" placeholder="Ex: tema, textos, tamanho, referências..."></textarea>
+      <textarea name="banner_pedido" placeholder="Tema, textos, tamanho..."></textarea>
 
       <label>Como você quer sua THUMBNAIL?</label>
-      <textarea name="thumbnail_pedido" placeholder="Ex: tema, estilo, título, referências..."></textarea>
+      <textarea name="thumbnail_pedido" placeholder="Tema, título, referências..."></textarea>
 
-      <!-- info extra -->
       <input type="hidden" name="tickets_atingidos" id="hiddenTickets">
       <input type="hidden" name="origem" value="Roleta - Norbit White">
 
@@ -378,17 +499,9 @@ textarea{ min-height:90px; resize:vertical; }
   </div>
 </div>
 
-<!-- ✅ Script do anúncio (como você pediu) -->
-<script>
-(function(s){
-  s.dataset.zone='10671343';
-  s.src='https://al5sm.com/tag.min.js';
-})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-</script>
-
 <script>
 /* =========================
-   MENU HAMBÚRGUER (funciona)
+   MENU HAMBURGUER
    ========================= */
 const btnMenu = document.getElementById("btnMenu");
 const menu = document.getElementById("menu");
@@ -403,9 +516,26 @@ btnMenu.addEventListener("click", ()=>{
 });
 menuOverlay.addEventListener("click", closeMenu);
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeMenu(); });
+</script>
 
+<script>
 /* =========================
-   ROLETA (NÃO BAGUNÇA)
+   ANÚNCIO (Monetag) - carrega sob demanda
+   ========================= */
+let adTagLoaded = false;
+function loadAdTagOnce(){
+  if(adTagLoaded) return;
+  adTagLoaded = true;
+  (function(s){
+    s.dataset.zone='10671343';
+    s.src='https://al5sm.com/tag.min.js';
+  })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+}
+</script>
+
+<script>
+/* =========================
+   ROLETA + ANÚNCIO OBRIGATÓRIO
    ========================= */
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
@@ -425,72 +555,95 @@ const spinBtn = document.getElementById("spinBtn");
 const ticketsText = document.getElementById("ticketsText");
 const bar = document.getElementById("bar");
 
-/* ✅ salvamento */
-const LS_TICKETS = "nw_roleta_tickets";
-const LS_SPINS   = "nw_roleta_spins";
-const LS_LOCK    = "nw_roleta_lock_reward"; // trava giro até enviar form
-
+const LS_TICKETS = "nw_roleta_tickets_v2";
 let tickets = Number(localStorage.getItem(LS_TICKETS) || 0);
-let spinsCount = Number(localStorage.getItem(LS_SPINS) || 0);
-let lockReward = (localStorage.getItem(LS_LOCK) === "1");
 
 let angle = 0;
 let spinning = false;
 
-/* =========================
-   SOM (leve)
-   ========================= */
-let audioCtx = null;
-let tickTimer = null;
+/* ===== MODAL AD ===== */
+const adModal = document.getElementById("adModal");
+const watchAdBtn = document.getElementById("watchAdBtn");
+const closeAdBtn = document.getElementById("closeAdBtn");
+const adStatus = document.getElementById("adStatus");
+const adText = document.getElementById("adText");
 
-function ensureAudio(){
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if(audioCtx.state === "suspended") audioCtx.resume();
+let adUnlocked = false;
+let adCountdownTimer = null;
+
+function openAdModal(){
+  adModal.classList.add("show");
+  adModal.setAttribute("aria-hidden","false");
+  adStatus.textContent = "";
+  adText.innerHTML = `Clique em <b>VER ANÚNCIO</b>. Após carregar, aguarde alguns segundos para liberar o giro.`;
+  watchAdBtn.disabled = false;
+}
+function closeAdModal(){
+  adModal.classList.remove("show");
+  adModal.setAttribute("aria-hidden","true");
+}
+closeAdBtn.addEventListener("click", closeAdModal);
+
+function startAdCountdown(seconds){
+  let s = seconds;
+  watchAdBtn.disabled = true;
+  adStatus.textContent = `Aguarde ${s}s...`;
+
+  if(adCountdownTimer) clearInterval(adCountdownTimer);
+  adCountdownTimer = setInterval(()=>{
+    s--;
+    if(s <= 0){
+      clearInterval(adCountdownTimer);
+      adCountdownTimer = null;
+      adUnlocked = true;
+      adStatus.textContent = "Liberado ✅ Agora você pode girar!";
+      setTimeout(closeAdModal, 400);
+      spinBtn.disabled = false;
+    }else{
+      adStatus.textContent = `Aguarde ${s}s...`;
+    }
+  }, 1000);
 }
 
-function playTick(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = "square";
-  o.frequency.value = 820;
-  g.gain.value = 0.035;
-  o.connect(g); g.connect(audioCtx.destination);
-  const t = audioCtx.currentTime;
-  g.gain.setValueAtTime(0.035, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-  o.start(t); o.stop(t + 0.03);
+watchAdBtn.addEventListener("click", ()=>{
+  loadAdTagOnce();
+  try{
+    const w = window.open("about:blank", "_blank");
+    if(w) setTimeout(()=>{ try{ w.close(); }catch(e){} }, 600);
+  }catch(e){}
+  startAdCountdown(6);
+});
+
+/* ===== MODAL REWARD ===== */
+const rewardModal = document.getElementById("rewardModal");
+const rewardForm = document.getElementById("rewardForm");
+const closeReward = document.getElementById("closeReward");
+const rewardStatus = document.getElementById("rewardStatus");
+const hiddenTickets = document.getElementById("hiddenTickets");
+
+function openRewardModal(ticketsAtingidos){
+  hiddenTickets.value = String(ticketsAtingidos);
+  rewardStatus.textContent = "";
+  rewardModal.classList.add("show");
+  rewardModal.setAttribute("aria-hidden","false");
+}
+function closeRewardModal(){
+  rewardModal.classList.remove("show");
+  rewardModal.setAttribute("aria-hidden","true");
+  // após fechar, volta a exigir anúncio no próximo giro
+  spinBtn.disabled = false;
+}
+closeReward.addEventListener("click", closeRewardModal);
+
+/* ===== UI ===== */
+function saveTickets(){ localStorage.setItem(LS_TICKETS, String(tickets)); }
+function updateUI(){
+  ticketsText.textContent = "Tickets acumulados: " + tickets;
+  const pct = Math.min((tickets/50)*100, 100);
+  bar.style.width = pct + "%";
 }
 
-function playDing(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = "sine";
-  o.frequency.value = 1200;
-  g.gain.value = 0.06;
-  o.connect(g); g.connect(audioCtx.destination);
-  const t = audioCtx.currentTime;
-  g.gain.setValueAtTime(0.06, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-  o.start(t); o.stop(t + 0.22);
-}
-
-function startTicking(){
-  stopTicking();
-  tickTimer = setInterval(playTick, 75);
-  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 95);} }, 1200);
-  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 125);} }, 2600);
-  setTimeout(()=>{ if(tickTimer){ clearInterval(tickTimer); tickTimer=setInterval(playTick, 160);} }, 3600);
-}
-
-function stopTicking(){
-  if(tickTimer){ clearInterval(tickTimer); tickTimer=null; }
-}
-
-/* =========================
-   DESENHO
-   ========================= */
+/* ===== DESENHO COM TEXTO ===== */
 function draw(){
   const W = canvas.width, H = canvas.height;
   const cx = W/2, cy = H/2;
@@ -498,7 +651,6 @@ function draw(){
   const slice = (Math.PI*2)/prizes.length;
 
   ctx.clearRect(0,0,W,H);
-
   ctx.save();
   ctx.translate(cx,cy);
   ctx.rotate(angle);
@@ -509,22 +661,21 @@ function draw(){
 
     ctx.beginPath();
     ctx.moveTo(0,0);
-    ctx.arc(0,0,r,end,start,true);
+    ctx.arc(0,0,r,start,end);
     ctx.closePath();
     ctx.fillStyle = prizes[i].color;
     ctx.fill();
 
-    // texto acompanhando a roleta (deitado)
     ctx.save();
     const mid = start + slice/2;
     ctx.rotate(mid);
 
-    ctx.font = "900 24px Arial";
+    ctx.font = "900 26px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "rgba(0,0,0,.6)";
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "rgba(0,0,0,.65)";
     ctx.strokeText(prizes[i].label, r*0.65, 0);
 
     ctx.fillStyle = "#fff";
@@ -532,88 +683,22 @@ function draw(){
 
     ctx.restore();
   }
-
   ctx.restore();
 }
 
 function easeOut(t){ return 1 - Math.pow(1-t,3); }
 
-/* =========================
-   UI + salvamento
-   ========================= */
-function saveState(){
-  localStorage.setItem(LS_TICKETS, String(tickets));
-  localStorage.setItem(LS_SPINS, String(spinsCount));
-  localStorage.setItem(LS_LOCK, lockReward ? "1" : "0");
-}
-
-function updateUI(){
-  ticketsText.textContent = "Tickets acumulados: " + tickets;
-  const pct = Math.min((tickets/50)*100,100);
-  bar.style.width = pct + "%";
-
-  // se travado por prêmio, desabilita giro
-  if(lockReward){
-    spinBtn.disabled = true;
-  }else{
-    spinBtn.disabled = false;
-  }
-}
-
-/* =========================
-   PRÊMIO 50+ (Formspree)
-   ========================= */
-const rewardModal = document.getElementById("rewardModal");
-const rewardForm = document.getElementById("rewardForm");
-const closeReward = document.getElementById("closeReward");
-const rewardStatus = document.getElementById("rewardStatus");
-const hiddenTickets = document.getElementById("hiddenTickets");
-
-function openReward(){
-  lockReward = true;
-  saveState();
-  updateUI();
-
-  hiddenTickets.value = String(tickets);
-  rewardStatus.textContent = "";
-  rewardModal.classList.add("show");
-  rewardModal.setAttribute("aria-hidden","false");
-}
-
-function closeRewardModal(){
-  rewardModal.classList.remove("show");
-  rewardModal.setAttribute("aria-hidden","true");
-}
-
-closeReward.addEventListener("click", ()=> closeRewardModal());
-
-// quando já está >=50 ao carregar (caso acumulou antes)
-function checkReward(){
-  if(tickets >= 50){
-    openReward();
-  }
-}
-
-/* Ao enviar: zera tickets + spins e destrava giro */
-rewardForm.addEventListener("submit", ()=>{
-  rewardStatus.textContent = "Enviando...";
-
-  // ZERA após enviar (como você pediu)
-  tickets = 0;
-  spinsCount = 0;
-  lockReward = false;
-  saveState();
-  updateUI();
-
-  rewardStatus.textContent = "Enviado ✅ Tickets zerados! Você já pode girar novamente.";
-  setTimeout(()=> closeRewardModal(), 900);
-});
-
-/* =========================
-   GIRO (sem bug)
-   ========================= */
+/* ===== GIRO ===== */
 function spin(){
-  if(spinning || lockReward) return;
+  if(spinning) return;
+
+  if(!adUnlocked){
+    spinBtn.disabled = true;
+    openAdModal();
+    return;
+  }
+
+  adUnlocked = false;
   spinning = true;
   spinBtn.disabled = true;
 
@@ -623,10 +708,8 @@ function spin(){
   const final = (Math.PI*2*6) - targetMid;
 
   const startAngle = angle;
-  const duration = 4500;
+  const duration = 3800;
   const start = performance.now();
-
-  startTicking();
 
   function animate(now){
     const t = (now-start)/duration;
@@ -637,38 +720,37 @@ function spin(){
     if(t < 1){
       requestAnimationFrame(animate);
     }else{
-      stopTicking();
-      playDing();
-
       tickets += prizes[idx].value;
-      spinsCount += 1;
-      saveState();
+      saveTickets();
       updateUI();
 
       spinning = false;
 
-      // ✅ se bateu 50 ou mais, abre o form
       if(tickets >= 50){
-        openReward();
+        const atingidos = tickets;
+        tickets = 0;          // zera ao chegar 50
+        saveTickets();
+        updateUI();
+        openRewardModal(atingidos);
+        spinBtn.disabled = true;
       }else{
         spinBtn.disabled = false;
       }
     }
   }
-
   requestAnimationFrame(animate);
 }
 
-/* Clique no botão GIRAR */
-spinBtn.addEventListener("click", ()=>{
-  ensureAudio();
-  spin();
+spinBtn.addEventListener("click", spin);
+
+rewardForm.addEventListener("submit", ()=>{
+  rewardStatus.textContent = "Enviando...";
+  setTimeout(()=>{ rewardStatus.textContent = "Enviado ✅"; }, 600);
 });
 
 /* init */
 draw();
 updateUI();
-checkReward();
 </script>
 
 </body>
