@@ -167,7 +167,6 @@ footer{
     Junte <b>50 tickets</b> e desbloqueie:<br>
     <b>UMA LOGO + UM BANNER + UMA THUMBNAIL</b>
   </p>
-
 </div>
 
 <footer>
@@ -201,13 +200,39 @@ let angle = 0;
 let tickets = 0;
 let spinning = false;
 
-/* ✅ NOVO: conta quantos giros já foram feitos */
+/* ✅ conta quantos giros já foram feitos (pra exigir anúncio no 2º+) */
 let spinsDone = 0;
 
 const ticketsText = document.getElementById("ticketsText");
 const bar = document.getElementById("bar");
 const spinBtn = document.getElementById("spinBtn");
 const subText = document.getElementById("subText");
+
+/* =========================
+   💾 SALVAMENTO AUTOMÁTICO
+   ========================= */
+const STORAGE_KEY = "NW_ROULETTE_STATE_V1";
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      tickets,
+      spinsDone,
+      angle
+    }));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const st = JSON.parse(raw);
+    if(typeof st.tickets === "number") tickets = st.tickets;
+    if(typeof st.spinsDone === "number") spinsDone = st.spinsDone;
+    if(typeof st.angle === "number") angle = st.angle;
+  }catch(e){}
+}
 
 /* =========================
    🔊 SOM (WebAudio leve)
@@ -329,31 +354,26 @@ function easeOut(t){ return 1-Math.pow(1-t,3); }
 /* =========================
    ✅ ANÚNCIO REWARDED (CONFIRMA "ASSISTIU")
    =========================
-   Você precisa ligar aqui a função rewarded REAL do Monetag (ou provedor).
-   Tem que resolver(true) SÓ quando o anúncio termina.
+   Coloque aqui o rewarded REAL do seu provedor.
+   Tem que resolver(true) SÓ quando o anúncio terminar.
 */
 function showRewardedAd(){
   return new Promise((resolve) => {
-    // ✅ EXEMPLO (placeholder):
-    // Troque por: MonetagRewarded.show({ onReward: ()=>resolve(true), onClose: ()=>resolve(false) })
-
-    // Como o script comum não tem "confirmar assistiu",
-    // por padrão NÃO libera.
+    // Placeholder: sem callback real, não dá pra confirmar "assistiu"
     resolve(false);
   });
 }
 
 /* =========================
-   ✅ REGRA PEDIDA:
+   ✅ REGRA:
    1º giro: livre
-   2º+ giro: só gira se "assistiu anúncio"
+   2º+ giro: só gira se anúncio concluído
    ========================= */
 async function spinFlow(){
   if(spinning) return;
 
   ensureAudio();
 
-  // a partir do 2º giro, exige anúncio concluído
   if(spinsDone >= 1){
     spinBtn.disabled = true;
     subText.textContent = "Assista o anúncio para liberar o próximo giro...";
@@ -400,16 +420,18 @@ function spin(){
       playDing();
 
       tickets += prizes[idx].value;
-      updateUI();
 
       // ✅ conta giro concluído
       spinsDone++;
 
+      updateUI();
+
       spinning = false;
       spinBtn.disabled = false;
-
-      // Texto padrão volta
       subText.textContent = "Gire e acumule tickets até bater a meta.";
+
+      // ✅ salva ao final do giro
+      saveState();
     }
   }
 
@@ -420,16 +442,28 @@ function updateUI(){
   ticketsText.textContent="Tickets acumulados: "+tickets;
   const pct=Math.min((tickets/50)*100,100);
   bar.style.width=pct+"%";
+
+  // ✅ salva em qualquer update visual
+  saveState();
+
   if(tickets>=50){
     setTimeout(()=>{
       alert("🎉 PRÊMIO DESBLOQUEADO!");
       tickets=0;
+      spinsDone = 0; // opcional: reseta também a regra do anúncio
       updateUI();
+      saveState();
     },100);
   }
 }
 
+/* ✅ carrega quando abre e desenha já no estado salvo */
+loadState();
 draw();
+updateUI();
+
+/* ✅ salva também ao sair/recarregar */
+window.addEventListener("beforeunload", saveState);
 </script>
 
 </body>
