@@ -59,12 +59,15 @@ body::before{
 
 /* ===== TOPBAR: HAMBURGUER ESQUERDA + LOGO CENTRAL ===== */
 .topbar{
-  position:sticky;
+  position:fixed;
   top:0;
-  z-index:10;
+  left:0;
+  width:100%;
+  z-index:1000;
   backdrop-filter:blur(14px);
-  background:linear-gradient(180deg, rgba(8,4,12,.92) 0%, rgba(8,4,12,.55) 70%, rgba(8,4,12,0) 100%);
-  border-bottom:0;
+  -webkit-backdrop-filter:blur(14px);
+  background:rgba(0,0,0,.55);
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .topbar-inner{
@@ -471,6 +474,9 @@ body::before{
   .grid{grid-template-columns:1fr;}
   .teams{grid-template-columns:1fr;}
 }
+body{
+  padding-top:76px;
+}
 </style>
 </head>
 
@@ -522,7 +528,7 @@ body::before{
   <div class="card hero">
     <div class="hero-left">
       <div class="kicker">EVENTO</div>
-      <div class="date">05/03/2026 • 20:00 (BRT)</div>
+      <div class="date">06/03/2026 • 20:00 (BRT)</div>
       <div class="sub">
         Preencha os dados do seu time e os <b>4 jogadores</b> do squad.
         Assim que enviar, sua inscrição vai direto para a planilha e aparece no painel.
