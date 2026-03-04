@@ -324,6 +324,34 @@ footer a{
   .particles span{animation:none!important;}
 }
 </style>
+<style>
+/* ... seu CSS ... */
+
+.ad-wrap{
+  width:100%;
+  max-width:760px;       /* acompanha seus cards (ajuste se quiser) */
+  margin:16px auto;      /* centraliza e dá respiro */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:0 12px;        /* evita encostar nas bordas no celular */
+}
+
+.ad-box{
+  width:min(320px, 100%); /* no celular ele encolhe sem estourar */
+  overflow:hidden;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.35);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+/* garante que o iframe não force largura maior */
+.ad-box iframe{
+  max-width:100% !important;
+  display:block !important;
+}
+</style>
 </head>
 
 <body>
@@ -379,6 +407,20 @@ footer a{
 
   <p class="campeonato-text">
     Clique em <b>Quero Participar</b> para fazer sua inscrição na personalizada.
+    <div class="ad-wrap">
+  <div class="ad-box">
+    <script>
+      atOptions = {
+        'key' : '95c72bd3f233267cce221e0224cb6bf1',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/95c72bd3f233267cce221e0224cb6bf1/invoke.js"></script>
+  </div>
+</div>
   </p>
 </section>
 
@@ -439,7 +481,21 @@ footer a{
     <span>@imgoogleofc</span>
   </div>
 </section>
-
+<!-- ANÚNCIO ABAIXO DAS AVALIAÇÕES -->
+<div class="ad-wrap">
+  <div class="ad-box">
+    <script>
+      atOptions = {
+        'key' : '95c72bd3f233267cce221e0224cb6bf1',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/95c72bd3f233267cce221e0224cb6bf1/invoke.js"></script>
+  </div>
+</div>
 <footer>
   <div class="footer-links">
     <a href="politica.html">Política</a> |
