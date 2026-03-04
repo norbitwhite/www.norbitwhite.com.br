@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Inscrição - Norbit White</title>
 
 <style>
@@ -40,11 +40,7 @@ body{
   align-items:center;
   padding:12px 14px;
 }
-.logo{
-  height:56px;
-  width:auto;
-  display:block;
-}
+.logo{height:56px;width:auto;display:block;}
 .logo-center{display:flex; justify-content:center; align-items:center;}
 
 .menu-toggle{
@@ -64,8 +60,7 @@ body{
 /* ===== MENU ===== */
 .nav{
   position:fixed;
-  top:0;
-  left:0;
+  top:0; left:0;
   height:100vh;
   width:260px;
   background:rgba(10,5,18,.98);
@@ -101,28 +96,17 @@ body{
   transition:.25s;
   z-index:1050;
 }
-.menu-overlay.active{
-  opacity:1;
-  pointer-events:auto;
-}
+.menu-overlay.active{opacity:1; pointer-events:auto;}
 
 /* ===== CONTEÚDO ===== */
 .wrapper{
   max-width:1100px;
   margin:auto;
-  padding:104px 16px 70px;
+  padding:104px 16px 40px;
 }
 .header{
   text-align:center;
   padding:10px 0 10px;
-}
-.header h1{
-  background:var(--grad);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  font-size:38px;
-  font-weight:1000;
-  letter-spacing:.8px;
 }
 .header p{
   margin-top:10px;
@@ -131,11 +115,14 @@ body{
   line-height:1.55;
 }
 
+/* Cards (retângulos) organizados e do mesmo tamanho */
 .card{
-  margin-top:8px;
-  padding:20px;
+  margin:10px auto;
+  padding:16px;
+  width:100%;
+  max-width:760px;
   background:rgba(255,255,255,.05);
-  border-radius:18px;
+  border-radius:16px;
   border:1px solid rgba(255,255,255,.10);
 }
 
@@ -148,16 +135,13 @@ body{
   -webkit-text-fill-color:transparent;
 }
 
+/* FORM */
 .form-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:12px;
 }
-.field{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-}
+.field{display:flex; flex-direction:column; gap:7px;}
 label{
   font-size:11px;
   letter-spacing:1px;
@@ -239,7 +223,7 @@ button{
   gap:12px;
 }
 .team-card{
-  padding:15px;
+  padding:14px;
   border-radius:14px;
   background:rgba(0,0,0,.40);
   border:1px solid rgba(255,255,255,.10);
@@ -269,6 +253,43 @@ button{
   word-break:break-word;
 }
 
+/* ===== Score rows (quadradinhos de trás) mais organizados ===== */
+.score-list{display:grid; gap:12px; margin-bottom:14px; font-weight:900;}
+.score-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.05);
+}
+.score-row.top1{
+  background:var(--grad);
+  border-color:rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:1000;
+}
+.score-row.top2{background:rgba(255,255,255,.14);}
+.score-row.top3{background:rgba(255,255,255,.09);}
+.score-row.kill{
+  background:linear-gradient(90deg,#ff3bd4,#7a2cff);
+  color:#fff;
+  font-weight:1000;
+  border-color:rgba(255,255,255,.10);
+}
+
+/* texto obs */
+.score-note{
+  margin-top:10px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  text-align:center;
+  font-size:12px;
+  opacity:.85;
+  line-height:1.6;
+}
+
 /* partículas */
 #particles{
   position:fixed;
@@ -277,21 +298,33 @@ button{
   pointer-events:none;
 }
 
-@media(max-width:820px){
-  .teams{grid-template-columns:repeat(2,1fr);}
+/* efeito máquina de escrever (sem “voar”) */
+.typing{
+  display:inline-block;
+  white-space:nowrap;
+  overflow:hidden;
+  border-right:3px solid #ff3bd4;
+  animation:typing 2.2s steps(9,end) 1 both, cursorBlink .8s infinite;
 }
-@media(max-width:620px){
-  .form-grid{grid-template-columns:1fr;}
+
+.footer{
+  margin:18px auto 0;
+  text-align:center;
+  font-size:12px;
+  opacity:.75;
+  letter-spacing:.6px;
+  max-width:760px;
 }
+
+@media(max-width:820px){ .teams{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:620px){ .form-grid{grid-template-columns:1fr;} }
 @media(max-width:520px){
   .teams{grid-template-columns:1fr;}
-  .header h1{font-size:34px;}
 }
 </style>
 </head>
 
 <body>
-
 <canvas id="particles"></canvas>
 
 <div class="menu-overlay" id="overlay"></div>
@@ -317,105 +350,47 @@ button{
 </nav>
 
 <div class="wrapper">
-<div class="header">
-  <h1>INSCRIÇÃO</h1>
-  <p>Preencha a ficha e garanta sua vaga. O painel abaixo atualiza automaticamente.</p>
-</div>
+
+  <div class="header">
+<h1 style="
+  text-align:center;
+  font-size:38px;
+  font-weight:1000;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#ff3bd4,#7a2cff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+">
+  INSCRIÇÃO
+</h1>
+    <p>Personalizada Casual • Vem se Divertir ;)</p>
+  </div>
 
   <!-- CARD PONTUAÇÃO -->
-<!-- CARD PONTUAÇÃO -->
-<div class="card">
+  <div class="card">
+    <div class="score-list">
+      <div class="score-row top1"><span>1º Lugar</span><span>200 pts</span></div>
+      <div class="score-row top2"><span>2º Lugar</span><span>130 pts</span></div>
+      <div class="score-row top3"><span>3º Lugar</span><span>110 pts</span></div>
+      <div class="score-row"><span>4º Lugar</span><span>90 pts</span></div>
+      <div class="score-row"><span>5º Lugar</span><span>80 pts</span></div>
+      <div class="score-row"><span>6º Lugar</span><span>70 pts</span></div>
+      <div class="score-row"><span>7º Lugar</span><span>70 pts</span></div>
+      <div class="score-row"><span>8º Lugar</span><span>70 pts</span></div>
+      <div class="score-row"><span>9º Lugar</span><span>60 pts</span></div>
+      <div class="score-row"><span>10º Lugar</span><span>60 pts</span></div>
+      <div class="score-row kill"><span>1 KILL</span><span>20 pts</span></div>
+    </div>
 
-<!-- LISTA COMPLETA PADRONIZADA -->
-<div style="display:grid; gap:14px; margin-bottom:20px; font-weight:900;">
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:var(--grad); color:#fff;">
-<span>1º Lugar</span>
-<span>200 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.14);">
-<span>2º Lugar</span>
-<span>130 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.08);">
-<span>3º Lugar</span>
-<span>110 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>4º Lugar</span>
-<span>90 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>5º Lugar</span>
-<span>80 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>6º Lugar</span>
-<span>70 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>7º Lugar</span>
-<span>70 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>8º Lugar</span>
-<span>70 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>9º Lugar</span>
-<span>60 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-radius:16px; background:rgba(255,255,255,.05);">
-<span>10º Lugar</span>
-<span>60 pts</span>
-</div>
-
-<div style="display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-radius:18px; background:linear-gradient(90deg,#ff3bd4,#7a2cff); color:#fff; font-weight:1000;">
-<span>1 KILL</span>
-<span>20 pts</span>
-</div>
-
-</div>
-
-<div style="
-margin-top:14px;
-padding-top:14px;
-border-top:1px solid rgba(255,255,255,.08);
-text-align:center;
-font-size:12px;
-opacity:.85;
-line-height:1.6;
-">
-5 Partidas serão contabilizadas, as <b>3 melhores</b>.<br>
-<span>Obs.: Mande as fotos das partidas para nossa equipe!</span>
-      </div>
+    <div class="score-note">
+      5 Partidas serão contabilizadas, as <b>3 melhores</b>.<br>
+      <span>Obs.: Mande as fotos das partidas para nossa equipe!</span>
     </div>
   </div>
-</div>
+
   <!-- FORM -->
-  <h2 style="
-text-align:center;
-font-size:30px;
-font-weight:1573;
-letter-spacing 45px;
-margin:12px 0 12px 0;
-background:linear-gradient(90deg,#ff3bd4,#7a2cff);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-">
-PREENCHA
-</h2>
   <div class="card" id="formCard">
-    <div class="section-title">Ficha do Time</div>
+    <div class="section-title">Ficha do Squad:</div>
 
     <form id="form">
       <div class="form-grid">
@@ -424,15 +399,14 @@ PREENCHA
           <input id="clan" maxlength="40" required placeholder="Ex: Os Brabos">
         </div>
 
-       <div class="field">
-<label for="whats">WhatsApp (responsável)</label>
-<input id="whats" maxlength="30" required placeholder="Ex: 21 99999-9999">
-</div>
+        <div class="field">
+          <label for="whats">WhatsApp (responsável)</label>
+          <input id="whats" maxlength="30" required placeholder="Ex: 21 99999-9999">
+        </div>
 
-<div class="field">
-<label for="insta">Instagram</label>
-<input id="insta" maxlength="40" placeholder="@seuinstagram">
-</div>
+        <div class="field">
+          <label for="insta">Instagram</label>
+          <input id="insta" maxlength="40" placeholder="@seuinstagram">
         </div>
 
         <div class="field">
@@ -471,9 +445,10 @@ PREENCHA
       <div class="section-title" style="margin:0">Painel de Times</div>
       <div class="countpill"><span id="count">0</span>/12 VAGAS</div>
     </div>
-
     <div class="teams" id="teams"></div>
   </div>
+
+  <div class="footer">© 2026 Norbit White</div>
 </div>
 
 <script>
@@ -544,7 +519,7 @@ function lockForm(isLocked){
   const submitBtn = document.querySelector('button[type="submit"]');
   card.classList.toggle("form-locked", isLocked);
 
-  ["clan","whats","p1","p2","p3","p4"].forEach(id=>{
+  ["clan","whats","insta","p1","p2","p3","p4"].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.disabled = !!isLocked;
   });
@@ -567,6 +542,7 @@ function renderTeams(list){
 
     const clan = t ? (t.clan || t.team || t.time || "") : "";
     const whats = t ? (t.whatsapp || t.whats || "") : "";
+    const insta = t ? (t.instagram || t.insta || "") : "";
     const p1 = t ? (t.p1 || "") : "";
     const p2 = t ? (t.p2 || "") : "";
     const p3 = t ? (t.p3 || "") : "";
@@ -579,6 +555,7 @@ function renderTeams(list){
           <b>TIME ${String(i+1).padStart(2,"0")}</b>
           <div class="meta"><strong>Clã:</strong> ${escapeHtml(clan)}</div>
           <div class="meta"><strong>Whats:</strong> ${escapeHtml(whats)}</div>
+          ${insta ? `<div class="meta"><strong>Insta:</strong> ${escapeHtml(insta)}</div>` : ``}
           <div class="meta"><strong>Integrantes:</strong> ${escapeHtml(p1)}, ${escapeHtml(p2)}, ${escapeHtml(p3)}, ${escapeHtml(p4)}</div>
         </div>
       `;
@@ -593,13 +570,11 @@ function renderTeams(list){
     }
   }
   el.innerHTML = html;
-
   lockForm(count >= MAX_TEAMS);
 }
 
 /* ===== API ===== */
 async function fetchTeams(){
-  // precisa do seu Apps Script suportar ?action=list e retornar {ok:true, teams:[...]}
   const data = await jsonp(`${ENDPOINT}?action=list`);
   if(!data || data.ok !== true) throw new Error((data && data.error) ? data.error : "Falha ao listar");
   return (data.teams || []).slice(0, MAX_TEAMS);
@@ -608,25 +583,19 @@ async function fetchTeams(){
 async function sendTeam(){
   const clan = $("clan").value.trim();
   const whats = $("whats").value.trim();
+  const insta = $("insta").value.trim();
   const p1 = $("p1").value.trim();
   const p2 = $("p2").value.trim();
   const p3 = $("p3").value.trim();
   const p4 = $("p4").value.trim();
 
-  // Envia compatível com scripts antigos:
-  // team/whatsapp/p1..p4 e também clan/whats (se você usar nomes novos)
   const q = new URLSearchParams({
     action: "add",
-
-    // novos (se seu script usar)
     clan, whats,
-
-    // antigos (se seu script usar)
     team: clan,
     whatsapp: whats,
-    instagram: "",
-    responsavel: "",
-
+    instagram: insta,
+    insta,
     p1, p2, p3, p4
   });
 
