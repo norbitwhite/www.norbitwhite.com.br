@@ -494,23 +494,23 @@ function typeEffect(){
   }
 }
 window.addEventListener("load", typeEffect);
-</script>
 
-<!-- IN-PAGE PUSH -->
+</script>
+<!-- IN-PAGE PUSH (Adcash) -->
 <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 <script>
-window.addEventListener("load", function() {
-  if (window.aclib && typeof aclib.runInPagePush === "function") {
-    aclib.runInPagePush({
-      zoneId: '11038126',
-      maxAds: 2
-    });
-  } else {
-    // debug (se não aparecer, olha no console)
-    console.log("aclib não carregou (bloqueador/adblock/https/local).", window.aclib);
-  }
+window.addEventListener("load", function () {
+  if (!window.aclib || typeof aclib.runInPagePush !== "function") return;
+
+  // alterna entre 2 zones (50/50)
+  const zones = ["11038126", "11040210"];
+  const zoneId = zones[Math.floor(Math.random() * zones.length)];
+
+  aclib.runInPagePush({
+    zoneId: zoneId,
+    maxAds: 2
+  });
 });
 </script>
-
 </body>
 </html>
