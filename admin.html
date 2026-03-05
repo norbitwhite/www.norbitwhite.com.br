@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Painel Admin • Campeonato</title>
+<title>Admin • Campeonato</title>
 
 <style>
   :root{
@@ -17,6 +17,7 @@
     --warn:#ffd166;
     --bad:#ff5c7a;
   }
+
   *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
   body{
     margin:0;
@@ -25,6 +26,38 @@
                 linear-gradient(180deg, #07010f, var(--bg));
     color:#fff;
   }
+
+  /* Menu lateral */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:30;display:none}
+  .overlay.open{display:block}
+  .sidebar{
+    position:fixed;top:0;left:-280px;width:280px;height:100%;
+    background: rgba(18,2,35,.95);
+    backdrop-filter: blur(12px);
+    border-right:1px solid var(--stroke);
+    padding:16px;
+    transition:.25s ease;
+    z-index:40;
+  }
+  .sidebar.open{left:0}
+  .sideTop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .sideTitle{font-weight:900}
+  .closeBtn,.menuBtn{
+    width:42px;height:42px;border-radius:12px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.20);
+    color:#fff; font-size:20px; cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sideLinks{margin-top:14px; display:grid; gap:10px;}
+  .sideLinks a{
+    text-decoration:none;color:#fff;
+    padding:12px 12px;border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.18);
+  }
+  .sideLinks a:hover{border-color:rgba(255,0,183,.35);}
+
   header{
     position:sticky; top:0; z-index:20;
     display:flex; align-items:center; justify-content:space-between;
@@ -33,8 +66,7 @@
     backdrop-filter: blur(10px);
     border-bottom:1px solid var(--stroke);
   }
-  .logoCenter{height:40px;width:auto;display:block;}
-  .menuRight{display:flex; gap:10px; align-items:center;}
+  .logoCenter{height:40px;width:auto;display:block}
   .pill{
     font-size:12px; color:var(--txt);
     padding:7px 10px;border-radius:999px;
@@ -42,16 +74,10 @@
     background:rgba(0,0,0,.20);
     white-space:nowrap;
   }
-  .btnTop{
-    border:1px solid rgba(255,255,255,.16);
-    background:rgba(0,0,0,.20);
-    padding:10px 12px;border-radius:14px;
-    color:#fff; cursor:pointer; font-weight:900;
-  }
 
-  .container{max-width:1100px; margin:16px auto 40px; padding:0 16px;}
-  .grid{display:grid; grid-template-columns: .9fr 1.1fr; gap:14px;}
-  @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
+  .container{max-width:1200px;margin:16px auto 40px;padding:0 16px;}
+  .grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}}
 
   .card{
     background: rgba(20,3,42,.82);
@@ -68,7 +94,8 @@
   .cardHead h2{margin:0;font-size:14px;font-weight:950;letter-spacing:.25px}
   .cardBody{padding:16px;}
 
-  input, select{
+  label{display:block;font-size:12px;color:var(--txt);margin:10px 0 6px 2px}
+  input,select{
     width:100%;
     padding:12px 12px;
     border-radius:12px;
@@ -78,11 +105,11 @@
     outline:none;
   }
   input::placeholder{color:rgba(255,255,255,.55)}
-  label{display:block;font-size:12px;color:var(--txt);margin:10px 0 6px 2px}
-  .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   @media (max-width:560px){ .row{grid-template-columns:1fr;} }
 
-  .actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;}
+  .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;}
   .btn{
     border:none;
     padding:12px 14px;
@@ -99,14 +126,8 @@
     padding:12px 14px;border-radius:14px;
     color:#fff; cursor:pointer; font-weight:900;
   }
-  .danger{
-    border:1px solid rgba(255,92,122,.35);
-    background:rgba(255,92,122,.10);
-  }
-  .ok{
-    border:1px solid rgba(57,255,182,.28);
-    background:rgba(57,255,182,.10);
-  }
+  .danger{border-color:rgba(255,92,122,.35); background:rgba(255,92,122,.10);}
+  .ok{border-color:rgba(57,255,182,.28); background:rgba(57,255,182,.10);}
 
   .statusBox{
     margin-top:12px;
@@ -120,7 +141,7 @@
     white-space:pre-wrap;
   }
 
-  .list{display:grid; gap:10px; margin-top:10px;}
+  .list{display:grid;gap:10px;margin-top:10px;}
   .item{
     border:1px solid var(--stroke);
     background:rgba(0,0,0,.16);
@@ -131,10 +152,10 @@
   .item:hover{border-color:rgba(255,0,183,.35);}
   .itemTop{display:flex; justify-content:space-between; gap:10px; align-items:flex-start;}
   .itemTitle{font-weight:950;}
-  .meta{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.25;}
+  .meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.25;}
   .badge{
-    display:inline-flex; align-items:center; gap:8px;
-    padding:6px 10px; border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
     border:1px solid var(--stroke);
     background:rgba(0,0,0,.18);
     font-size:12px;
@@ -142,8 +163,8 @@
   .dot{width:8px;height:8px;border-radius:99px;background:var(--warn);}
   .dot.ok{background:var(--ok);}
 
-  .photos{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px;}
-  @media (max-width:800px){ .photos{grid-template-columns:1fr;} }
+  .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;}
+  @media(max-width:800px){.photos{grid-template-columns:1fr}}
   .phBox{
     border:1px solid var(--stroke);
     border-radius:16px;
@@ -152,15 +173,18 @@
     position:relative;
     min-height:180px;
   }
-  .phBox img{width:100%; height:180px; object-fit:cover; display:block;}
+  .phBox img{width:100%;height:180px;object-fit:cover;display:block;}
   .phTag{
-    position:absolute; top:10px; left:10px;
-    padding:6px 8px;
-    border-radius:999px;
-    font-size:11px;
+    position:absolute;top:10px;left:10px;
+    padding:6px 8px;border-radius:999px;font-size:11px;
     border:1px solid rgba(255,255,255,.16);
     background:rgba(0,0,0,.35);
   }
+
+  table{width:100%;border-collapse:collapse;min-width:520px;}
+  th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;vertical-align:top;}
+  th{color:#ffd1ef;text-align:left;background:rgba(255,255,255,.05);position:sticky;top:0;}
+  .tableWrap{margin-top:12px;overflow:auto;border:1px solid var(--stroke);border-radius:16px;}
 
   .footer{
     text-align:center;
@@ -177,33 +201,46 @@
 
 <body>
 
-<header>
-  <img src="logo400.jpg" class="logoCenter" alt="Logo">
-  <div class="menuRight">
-    <span class="pill" id="who">Admin</span>
-    <button class="btnTop" id="btnReset" type="button">Reset Login</button>
-    <button class="btnTop" id="btnLogout" type="button">Sair</button>
+<div class="overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sideTop">
+    <div class="sideTitle">Menu</div>
+    <button class="closeBtn" id="closeBtn">✕</button>
   </div>
+  <div class="sideLinks">
+    <a href="index.html">🏠 Início</a>
+    <a href="roleta.html">🎰 Roleta</a>
+  </div>
+  <div class="statusBox" style="opacity:.85;margin-top:14px">
+    🔒 Admin: acesso restrito.
+  </div>
+</aside>
+
+<header>
+  <button class="menuBtn" id="menuBtn">☰</button>
+  <img src="logo400.jpg" class="logoCenter" alt="Logo">
+  <span class="pill" id="conn">Conectando…</span>
 </header>
 
-<!-- ✅ LOGIN APARECE POR PADRÃO (mesmo se JS falhar) -->
-<div class="container" id="loginView">
-  <div class="card" style="max-width:560px;margin:18px auto;">
+<!-- LOGIN -->
+<main class="container" id="loginView">
+  <section class="card" style="max-width:560px;margin:0 auto;">
     <div class="cardHead">
       <h2>🔒 Login do Admin</h2>
-      <span class="pill">Acesso restrito</span>
+      <span class="pill">Somente administrador</span>
     </div>
     <div class="cardBody">
       <label>Senha</label>
-      <input id="pass" type="password" placeholder="Digite a senha do admin" autocomplete="off">
+      <input id="pass" type="password" placeholder="Digite a senha" autocomplete="off">
       <div class="actions">
         <button class="btn" id="btnLogin" type="button">ENTRAR</button>
+        <button class="btn2" id="btnReset" type="button">Reset</button>
       </div>
       <div class="statusBox" id="loginStatus">Digite a senha para abrir o painel.</div>
       <div class="statusBox" id="fatal" style="display:none;border-color:rgba(255,92,122,.35);background:rgba(255,92,122,.10)"></div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 
 <!-- APP -->
 <main class="container" id="appView" style="display:none;">
@@ -212,7 +249,7 @@
     <!-- LISTA -->
     <section class="card">
       <div class="cardHead">
-        <h2>📥 Envios</h2>
+        <h2>📥 Envios (prints)</h2>
         <span class="pill" id="count">0</span>
       </div>
 
@@ -220,7 +257,7 @@
         <div class="row">
           <div>
             <label>Buscar (time/jogador)</label>
-            <input id="search" placeholder="Ex: Tryhard / player1" autocomplete="off">
+            <input id="search" placeholder="Ex: Tryhard / jogador1" autocomplete="off">
           </div>
           <div>
             <label>Filtro</label>
@@ -235,12 +272,13 @@
 
         <div class="actions">
           <button class="btn2" id="btnRefresh" type="button">Atualizar</button>
+          <button class="btn2" id="btnLogout" type="button">Sair</button>
         </div>
 
         <div class="list" id="list"></div>
 
         <div class="statusBox" style="opacity:.85">
-          ✅ Clique em um envio para abrir e editar kills.
+          ✅ Clique em um envio para abrir e lançar as kills reais.
         </div>
       </div>
     </section>
@@ -248,13 +286,13 @@
     <!-- DETALHE -->
     <section class="card">
       <div class="cardHead">
-        <h2>🛠️ Detalhe / Validação</h2>
-        <span class="pill" id="selPill">Nenhum selecionado</span>
+        <h2>🛠️ Validação / Kills</h2>
+        <span class="pill" id="selPill">Nenhum</span>
       </div>
 
       <div class="cardBody" id="detailEmpty">
         <div class="statusBox">
-          Selecione um envio na lista para validar e lançar as kills.
+          Selecione um envio na lista.
         </div>
       </div>
 
@@ -289,13 +327,13 @@
             <input id="d_whats" placeholder="Opcional">
           </div>
           <div>
-            <label>Total Kills (auto)</label>
+            <label>Total Kills</label>
             <input id="d_total" disabled>
           </div>
         </div>
 
-        <div class="statusBox" style="opacity:.85">
-          ✍️ Preencha kills reais de cada jogador e clique em <b>SALVAR</b>.
+        <div class="statusBox" style="opacity:.88">
+          ⚠️ O jogador não digita kills. Você coloca aqui olhando as prints.
         </div>
 
         <div class="row">
@@ -318,55 +356,75 @@
         <div class="actions">
           <button class="btn" id="btnSave" type="button">SALVAR</button>
           <button class="btn2 ok" id="btnWinner" type="button">DEFINIR VENCEDOR</button>
-          <button class="btn2" id="btnPending" type="button">VOLTAR P/ PENDENTE</button>
           <button class="btn2 danger" id="btnDelete" type="button">REMOVER</button>
         </div>
 
         <div class="statusBox" id="opStatus">Pronto.</div>
       </div>
-
     </section>
 
   </div>
+
+  <!-- TOP 10 -->
+  <section class="card" style="margin-top:14px;">
+    <div class="cardHead">
+      <h2>🏆 Top 10 (por kills — aprovados)</h2>
+      <span class="pill" id="topInfo">—</span>
+    </div>
+    <div class="cardBody">
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Time</th>
+              <th>Jogadores (kills)</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="top10">
+            <tr><td colspan="4" style="opacity:.75">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="statusBox" style="opacity:.85">
+        Esse Top 10 é o mesmo ranking que você vai mostrar no site público (sem campo de kills).
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer">
   © 2026 <strong>Norbit White</strong>. Painel Admin.
 </footer>
 
-<!-- Firebase compat (carrega ANTES do script principal) -->
+<!-- Firebase compat -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script>
-(function(){
-  const fatal = document.getElementById("fatal");
-  function showFatal(msg){
-    fatal.style.display = "";
-    fatal.textContent = "❌ ERRO NO ADMIN:\n" + msg + "\n\nDica: abra o console do navegador pra ver detalhes.";
-  }
-
-  window.addEventListener("error", (e)=> showFatal(e?.message || "Erro desconhecido"));
-  window.addEventListener("unhandledrejection", (e)=> showFatal((e?.reason && (e.reason.message || String(e.reason))) || "Promise rejeitada"));
-
-  // ====== CONFIG
+(() => {
+  // ===== CONFIG
   const ADMIN_PASSWORD = "1234"; // <<< TROQUE AQUI
 
-  // Firebase config (seu projeto)
+  // cole o mesmo config do seu site
   const firebaseConfig = {
     apiKey: "AIzaSyCsNJgQSscvh4Ckjc7BE0jP9SfmtvXloys",
     authDomain: "painel-campeonato.firebaseapp.com",
     projectId: "painel-campeonato"
   };
 
-  // ====== refs
+  // ===== UI
+  const conn = document.getElementById("conn");
   const loginView = document.getElementById("loginView");
   const appView = document.getElementById("appView");
   const pass = document.getElementById("pass");
   const btnLogin = document.getElementById("btnLogin");
-  const loginStatus = document.getElementById("loginStatus");
-  const btnLogout = document.getElementById("btnLogout");
   const btnReset = document.getElementById("btnReset");
+  const btnLogout = document.getElementById("btnLogout");
+  const loginStatus = document.getElementById("loginStatus");
+  const fatal = document.getElementById("fatal");
 
   const listEl = document.getElementById("list");
   const countEl = document.getElementById("count");
@@ -391,7 +449,6 @@
   const n2 = document.getElementById("n2");
   const n3 = document.getElementById("n3");
   const n4 = document.getElementById("n4");
-
   const k1 = document.getElementById("k1");
   const k2 = document.getElementById("k2");
   const k3 = document.getElementById("k3");
@@ -399,15 +456,30 @@
 
   const btnSave = document.getElementById("btnSave");
   const btnWinner = document.getElementById("btnWinner");
-  const btnPending = document.getElementById("btnPending");
   const btnDelete = document.getElementById("btnDelete");
 
-  // ====== state
-  let db = null;
-  let allDocs = [];
-  let selectedId = null;
-  let selectedData = null;
-  let unsub = null;
+  const top10El = document.getElementById("top10");
+  const topInfo = document.getElementById("topInfo");
+
+  // menu
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn");
+  function openMenu(){ sidebar.classList.add("open"); overlay.classList.add("open"); }
+  function closeMenu(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+  menuBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+  overlay.addEventListener("click", closeMenu);
+
+  // ===== helpers
+  function showFatal(msg){
+    fatal.style.display = "";
+    fatal.textContent = "❌ ERRO NO ADMIN:\n" + msg;
+    console.error(msg);
+  }
+  window.addEventListener("error", (e)=> showFatal(e?.message || "Erro desconhecido"));
+  window.addEventListener("unhandledrejection", (e)=> showFatal((e?.reason && (e.reason.message || String(e.reason))) || "Promise rejeitada"));
 
   function esc(s){
     return String(s||"").replace(/[&<>"']/g, (c)=>({
@@ -423,33 +495,46 @@
   }
   function setOp(msg){ opStatus.textContent = msg; }
 
-  function isAuthed(){ return localStorage.getItem("admin_ok") === "1"; }
+  [k1,k2,k3,k4].forEach(inp => inp.addEventListener("input", ()=> d_total.value = String(calcTotal())));
+
+  // ===== auth
+  const KEY = "admin_ok";
+  function isAuthed(){ return localStorage.getItem(KEY) === "1"; }
   function showLogin(){ loginView.style.display = ""; appView.style.display = "none"; }
   function showApp(){ loginView.style.display = "none"; appView.style.display = ""; }
 
   btnReset.addEventListener("click", () => {
-    localStorage.removeItem("admin_ok");
-    alert("Reset feito. Abra de novo e faça login.");
-    location.reload();
+    localStorage.removeItem(KEY);
+    loginStatus.textContent = "Reset feito. Digite a senha novamente.";
   });
 
   btnLogout.addEventListener("click", () => {
-    localStorage.removeItem("admin_ok");
-    if(unsub) unsub();
-    unsub = null;
-    showLogin();
+    localStorage.removeItem(KEY);
+    location.reload();
   });
 
   btnLogin.addEventListener("click", () => {
-    if(pass.value === ADMIN_PASSWORD){
-      localStorage.setItem("admin_ok", "1");
-      loginStatus.textContent = "✅ Acesso liberado.";
-      showApp();
-      start();
-    }else{
+    const p = (pass.value || "").trim();
+    if(p !== ADMIN_PASSWORD){
       loginStatus.textContent = "❌ Senha errada.";
+      return;
     }
+    localStorage.setItem(KEY,"1");
+    loginStatus.textContent = "✅ Logado!";
+    showApp();
+    start();
   });
+
+  // ===== firestore
+  let db = null;
+  let allDocs = [];
+  let selectedId = null;
+  let selectedData = null;
+  let unsubList = null;
+  let unsubTop = null;
+
+  // SUA COLEÇÃO DOS PRINTS:
+  const COLLECTION = "provas"; // <<< usa a mesma do seu painel atual
 
   function renderList(){
     const q = (searchEl.value || "").trim().toLowerCase();
@@ -465,8 +550,8 @@
       arr = arr.filter(x => {
         const d = x.data || {};
         const time = String(d.time||"").toLowerCase();
-        const j = Array.isArray(d.jogadores) ? d.jogadores : [];
-        const players = j.map(p => String(p?.nome||"").toLowerCase()).join(" ");
+        const jogadores = Array.isArray(d.jogadores) ? d.jogadores : [];
+        const players = jogadores.map(p => String(p?.nome||"").toLowerCase()).join(" ");
         return time.includes(q) || players.includes(q);
       });
     }
@@ -485,10 +570,10 @@
       const dot = st === "aprovado" ? "ok" : "";
       const pago = d.pago ? " • PAGO" : "";
       const total = Number(d.totalKills||0);
+      const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString("pt-BR") : "";
 
       const jogadores = Array.isArray(d.jogadores) ? d.jogadores : [];
       const nomes = jogadores.slice(0,4).map(p => p?.nome).filter(Boolean).join(", ");
-      const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString("pt-BR") : "";
 
       listEl.insertAdjacentHTML("beforeend", `
         <div class="item" data-id="${esc(x.id)}">
@@ -506,96 +591,4 @@
       `);
     });
 
-    document.querySelectorAll(".item").forEach(el => {
-      el.addEventListener("click", () => openDoc(el.getAttribute("data-id")));
-    });
-  }
-
-  async function openDoc(id){
-    selectedId = id;
-    selPill.textContent = "Selecionado: " + id.slice(0,6) + "…";
-    setOp("Carregando…");
-
-    const ref = db.collection("times").doc(id);
-    const snap = await ref.get();
-    if(!snap.exists){
-      setOp("❌ Esse envio não existe mais.");
-      return;
-    }
-
-    selectedData = snap.data() || {};
-    detailEmpty.style.display = "none";
-    detail.style.display = "";
-    fillDetail();
-    setOp("Pronto.");
-  }
-
-  function fillDetail(){
-    const d = selectedData || {};
-    const jogadores = Array.isArray(d.jogadores) ? d.jogadores : [
-      {nome:"",kills:0},{nome:"",kills:0},{nome:"",kills:0},{nome:"",kills:0}
-    ];
-
-    d_time.value = d.time || "";
-    d_whats.value = d.whatsapp || "";
-    d_status.value = (d.status || "pendente");
-    d_pago.value = String(!!d.pago);
-    d_total.value = String(Number(d.totalKills||0));
-
-    n1.value = jogadores[0]?.nome || "";
-    n2.value = jogadores[1]?.nome || "";
-    n3.value = jogadores[2]?.nome || "";
-    n4.value = jogadores[3]?.nome || "";
-
-    k1.value = String(Number(jogadores[0]?.kills||0));
-    k2.value = String(Number(jogadores[1]?.kills||0));
-    k3.value = String(Number(jogadores[2]?.kills||0));
-    k4.value = String(Number(jogadores[3]?.kills||0));
-
-    photos.innerHTML = "";
-    const fs = Array.isArray(d.fotos) ? d.fotos : [];
-    if(!fs.length){
-      photos.innerHTML = `<div class="statusBox">Sem fotos.</div>`;
-    }else{
-      fs.slice(0,3).forEach((url, i) => {
-        photos.insertAdjacentHTML("beforeend", `
-          <div class="phBox">
-            <span class="phTag">Foto ${i+1}</span>
-            <a href="${esc(url)}" target="_blank" rel="noopener">
-              <img src="${esc(url)}" alt="Foto ${i+1}">
-            </a>
-          </div>
-        `);
-      });
-    }
-
-    const st = (d.status || "pendente");
-    const paid = !!d.pago;
-    detailInfo.innerHTML = `
-      <b>Status:</b> ${esc(st)} ${paid ? "• <b>PAGO</b>" : ""} • <b>Total:</b> ${esc(String(Number(d.totalKills||0)))}<br>
-      <span style="opacity:.8">ID: ${esc(selectedId)}</span>
-    `;
-  }
-
-  [k1,k2,k3,k4].forEach(inp => inp.addEventListener("input", () => d_total.value = String(calcTotal())));
-
-  btnSave.addEventListener("click", async () => {
-    if(!selectedId) return;
-
-    const jogadores = [
-      { nome: (n1.value||"").trim(), kills: toNum(k1.value) },
-      { nome: (n2.value||"").trim(), kills: toNum(k2.value) },
-      { nome: (n3.value||"").trim(), kills: toNum(k3.value) },
-      { nome: (n4.value||"").trim(), kills: toNum(k4.value) }
-    ];
-    if(jogadores.some(j => !j.nome)){
-      setOp("⚠️ Preencha o nome dos 4 jogadores.");
-      return;
-    }
-
-    const total = jogadores.reduce((s,j)=>s + (Number(j.kills)||0), 0);
-    const st = d_status.value || "pendente";
-    const pago = (d_pago.value === "true");
-
-    setOp("Salvando…");
-    await
+    document
