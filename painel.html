@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Painel Campeonato</title>
+
+<style>
+  html{scroll-behavior:smooth;}
+
+  :root{
+    --bg:#0b0215;
+    --stroke:rgba(255,255,255,.10);
+    --txt:rgba(255,255,255,.90);
+    --muted:rgba(255,255,255,.70);
+    --pink:#ff00b7;
+    --purple:#7c00ff;
+  }
+
+  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+
+  body{
+    margin:0;
+    background: radial-gradient(900px 600px at 12% 10%, rgba(255,0,183,.18), transparent 60%),
+                radial-gradient(900px 600px at 88% 12%, rgba(124,0,255,.20), transparent 60%),
+                linear-gradient(180deg, #07010f, var(--bg));
+    color:#fff;
+  }
+
+  /* Partículas (fica atrás de tudo) */
+  #particles{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+  }
+
+  /* Header centralizado */
+  header{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px;
+    background: rgba(18,2,35,.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--stroke);
+  }
+
+  .menuBtn{
+    width:42px;height:42px;border-radius:12px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.20);
+    color:#fff; font-size:20px; cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  .logoCenter{
+    height:40px;
+    width:auto;
+    display:block;
+  }
+
+  /* Sidebar */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    z-index:30; display:none;
+  }
+  .sidebar{
+    position:fixed; top:0; left:-280px;
+    width:280px; height:100%;
+    background: rgba(18,2,35,.95);
+    backdrop-filter: blur(12px);
+    border-right:1px solid var(--stroke);
+    padding:16px;
+    transition:.25s ease;
+    z-index:40;
+  }
+  .sidebar.open{left:0;}
+  .overlay.open{display:block;}
+
+  .sideTop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .sideTitle{font-weight:900; letter-spacing:.3px;}
+  .closeBtn{
+    width:38px;height:38px;border-radius:12px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.20);
+    color:#fff; font-size:18px; cursor:pointer;
+  }
+
+  .sideLinks{margin-top:14px; display:grid; gap:10px;}
+  .sideLinks a{
+    text-decoration:none;color:#fff;
+    padding:12px 12px;border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.18);
+  }
+  .sideLinks a:hover{border-color:rgba(255,0,183,.35);}
+
+  /* Layout */
+  .container{
+    max-width:920px;
+    margin:16px auto 40px;
+    padding:0 16px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap:14px;
+  }
+  @media (max-width: 860px){
+    .grid{grid-template-columns:1fr;}
+  }
+
+  .card{
+    background: rgba(20,3,42,.82);
+    border:1px solid var(--stroke);
+    border-radius:18px;
+    box-shadow:0 18px 55px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+
+  .cardHead{
+    padding:14px 16px;
+    border-bottom:1px solid var(--stroke);
+    display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .cardHead h2{margin:0;font-size:14px;font-weight:950;letter-spacing:.25px}
+
+  .pill{
+    font-size:12px; color:var(--txt);
+    padding:7px 10px;border-radius:999px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.20);
+  }
+
+  .cardBody{padding:16px;}
+
+  label{display:block;font-size:12px;color:var(--txt);margin:0 0 6px 2px}
+  input{
+    width:100%;
+    padding:12px 12px;
+    border-radius:12px;
+    border:1px solid var(--stroke);
+    background: rgba(31,5,64,.75);
+    color:#fff;
+    outline:none;
+  }
+  input::placeholder{color:rgba(255,255,255,.55)}
+
+  .row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:560px){
+    .row{grid-template-columns:1fr;}
+  }
+
+  .hint{
+    margin-top:10px;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.35;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.16);
+  }
+
+  .fileBtn{
+    margin-top:10px;
+    display:flex; gap:10px; align-items:center; justify-content:center;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1px dashed rgba(255,255,255,.22);
+    background:rgba(255,255,255,.04);
+    cursor:pointer;
+    user-select:none;
+  }
+  .fileBtn:hover{border-color:rgba(255,0,183,.35); background:rgba(255,0,183,.05)}
+  .icon{
+    width:34px;height:34px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(45deg,var(--pink),var(--purple));
+    border:1px solid rgba(255,255,255,.12);
+  }
+  #fotos{display:none;}
+
+  .previewGrid{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  @media (max-width:680px){
+    .previewGrid{grid-template-columns:1fr;}
+  }
+  .previewBox{
+    border:1px solid var(--stroke);
+    border-radius:16px;
+    overflow:hidden;
+    background:rgba(0,0,0,.16);
+    position:relative;
+  }
+  .tag{
+    position:absolute;top:10px;left:10px;
+    font-size:11px;
+    padding:6px 8px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.35);
+    z-index:2;
+  }
+  .previewBox img{width:100%;height:180px;object-fit:cover;display:none;}
+  .ph{
+    height:180px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:var(--muted);
+    padding:14px;text-align:center;
+  }
+
+  .actions{
+    margin-top:14px;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .btn{
+    border:none;
+    padding:12px 14px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:950;
+    color:#fff;
+    background:linear-gradient(45deg,var(--pink),var(--purple));
+    box-shadow:0 14px 35px rgba(255,0,183,.10), 0 18px 55px rgba(124,0,255,.12);
+  }
+  .btn2{
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.20);
+    padding:12px 14px;border-radius:14px;
+    color:#fff; cursor:pointer; font-weight:900;
+  }
+  .btn:disabled, .btn2:disabled{opacity:.55; cursor:not-allowed;}
+
+  .progress{
+    margin-top:10px;height:10px;border-radius:999px;
+    border:1px solid var(--stroke);
+    overflow:hidden;background:rgba(0,0,0,.18);
+  }
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--purple));}
+
+  .status{
+    margin-top:10px;
+    padding:12px;
+    border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.16);
+    font-size:12px;
+    color:var(--txt);
+    line-height:1.35;
+  }
+
+  table{width:100%;border-collapse:collapse;min-width:520px;}
+  th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;vertical-align:top;}
+  th{color:#ffd1ef;text-align:left;background:rgba(255,255,255,.05);position:sticky;top:0;}
+  .tableWrap{margin-top:12px;overflow:auto;border:1px solid var(--stroke);border-radius:16px;}
+  a{color:#ffd1ef;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.35)}
+
+  /* Footer */
+  .footer{
+    text-align:center;
+    padding:30px 20px;
+    margin-top:40px;
+    font-size:13px;
+    color:rgba(255,255,255,0.6);
+    border-top:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.2);
+    backdrop-filter:blur(6px);
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- Partículas -->
+  <div id="particles"></div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sideTop">
+      <div class="sideTitle">Menu</div>
+      <button class="closeBtn" id="closeBtn">✕</button>
+    </div>
+
+    <div class="sideLinks">
+      <a href="index.html">🏠 Início</a>
+      <a href="roleta.html">🎰 Roleta</a>
+    </div>
+
+    <div class="hint" style="margin-top:14px">
+      envie <b>3 prints</b> estaremos conferindo instântaneamentw.
+    </div>
+  </aside>
+
+  <header>
+    <button class="menuBtn" id="menuBtn">☰</button>
+    <img src="logo400.jpg" class="logoCenter" alt="Logo">
+    <div style="width:42px"></div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <!-- ENVIO -->
+      <section class="card" id="enviar">
+        <div class="cardHead">
+          <h2>ENVIAR 3 PROVAS (FOTOS)</h2>
+          <span class="pill" id="sendState">Pronto</span>
+        </div>
+
+        <div class="cardBody">
+          <div class="row">
+            <div>
+              <label>Nome do time</label>
+              <input id="time" placeholder="Ex: Tryhard FC" autocomplete="off">
+            </div>
+            <div>
+              <label>WhatsApp (opcional)</label>
+              <input id="whats" placeholder="Ex: 2199999-9999" inputmode="numeric" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="hint">
+            ⚠️ Importante: envie <b>3 fotos/prints</b> do resultado.
+            Se selecionar mais de 3, vou usar só as 3 primeiras.
+          </div>
+
+          <label class="fileBtn" for="fotos" style="margin-top:12px">
+            <div class="icon">📷</div>
+            <div>
+              <div style="font-weight:950">Tocar para escolher 3 fotos</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">
+                JPG/PNG/WebP (HEIC pode falhar se Cloudinary não aceitar)
+              </div>
+            </div>
+          </label>
+
+          <!-- Se HEIC estiver dando ruim no seu celular, troque por:
+               accept="image/jpeg,image/png,image/webp"
+          -->
+          <input id="fotos" type="file" accept="image/*,.heic,.heif" multiple>
+
+          <div class="previewGrid">
+            <div class="previewBox">
+              <span class="tag">Foto 1</span>
+              <img id="img1" alt="Foto 1">
+              <div class="ph" id="ph1">Sem foto</div>
+            </div>
+            <div class="previewBox">
+              <span class="tag">Foto 2</span>
+              <img id="img2" alt="Foto 2">
+              <div class="ph" id="ph2">Sem foto</div>
+            </div>
+            <div class="previewBox">
+              <span class="tag">Foto 3</span>
+              <img id="img3" alt="Foto 3">
+              <div class="ph" id="ph3">Sem foto</div>
+            </div>
+          </div>
+
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <div class="status" id="status">Selecione 3 fotos e clique em “ENVIAR”.</div>
+
+          <div class="actions">
+            <button class="btn" id="btnEnviar" type="button">ENVIAR</button>
+            <button class="btn2" id="btnLimpar" type="button">LIMPAR</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABELA -->
+      <section class="card" id="tabela">
+        <div class="cardHead">
+          <h2>TABELA (AO VIVO)</h2>
+          <span class="pill" id="lastUpdate">Atualizando…</span>
+        </div>
+
+        <div class="cardBody">
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Provas</th>
+                </tr>
+              </thead>
+              <tbody id="lista">
+                <tr><td colspan="2" style="opacity:.75">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Se o upload falhar, a mensagem vai aparecer no bloco de envio.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2026 <strong>Norbit White</strong>. Todos os direitos reservados.
+  </footer>
+
+  <!-- Firebase COMPAT (sem module/import) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ===== CAPTURA ERROS E MOSTRA NO STATUS =====
+    window.addEventListener("error", (e) => {
+      const el = document.getElementById("status");
+      if(el) el.textContent = "❌ Erro no site: " + (e?.message || "desconhecido");
+      console.error(e);
+    });
+    window.addEventListener("unhandledrejection", (e) => {
+      const el = document.getElementById("status");
+      const msg = (e?.reason && (e.reason.message || String(e.reason))) || "Promise rejeitada";
+      if(el) el.textContent = "❌ Erro: " + msg;
+      console.error(e);
+    });
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCsNJgQSscvh4Ckjc7BE0jP9SfmtvXloys",
+      authDomain: "painel-campeonato.firebaseapp.com",
+      projectId: "painel-campeonato",
+      storageBucket: "painel-campeonato.firebasestorage.app",
+      messagingSenderId: "46995908595",
+      appId: "1:46995908595:web:3b8ebdf3715cbc9f3c9486"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Cloudinary
+    const CLOUD_NAME = "dokkth3qm";
+    const UPLOAD_PRESET = "painel_upload";
+    const FOLDER = "campeonato";
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+    // UI
+    const elTime = document.getElementById("time");
+    const elWhats = document.getElementById("whats");
+    const elFotos = document.getElementById("fotos");
+
+    const img1 = document.getElementById("img1");
+    const img2 = document.getElementById("img2");
+    const img3 = document.getElementById("img3");
+    const ph1 = document.getElementById("ph1");
+    const ph2 = document.getElementById("ph2");
+    const ph3 = document.getElementById("ph3");
+
+    const status = document.getElementById("status");
+    const bar = document.getElementById("bar");
+    const sendState = document.getElementById("sendState");
+
+    const btnEnviar = document.getElementById("btnEnviar");
+    const btnLimpar = document.getElementById("btnLimpar");
+
+    const lista = document.getElementById("lista");
+    const lastUpdate = document.getElementById("lastUpdate");
+
+    function setStatus(msg){ status.textContent = msg; }
+    function setProgress(p){ bar.style.width = `${Math.max(0, Math.min(100, p))}%`; }
+
+    function clearPreviews(){
+      [img1,img2,img3].forEach(img => { img.src=""; img.style.display="none"; });
+      [ph1,ph2,ph3].forEach(ph => { ph.style.display="flex"; ph.textContent="Sem foto"; });
+    }
+    function applyPreviews(files){
+      clearPreviews();
+      const imgs=[img1,img2,img3], phs=[ph1,ph2,ph3];
+      files.slice(0,3).forEach((f,i)=>{
+        const url = URL.createObjectURL(f);
+        imgs[i].src = url;
+        imgs[i].style.display = "block";
+        phs[i].style.display = "none";
+      });
+    }
+
+    elFotos.addEventListener("change", () => {
+      const files = Array.from(elFotos.files || []);
+      if(!files.length){
+        clearPreviews();
+        setStatus("Selecione 3 fotos e clique em “ENVIAR”.");
+        return;
+      }
+      applyPreviews(files);
+      if(files.length < 3) setStatus(`Faltam ${3 - files.length} foto(s). Selecione 3.`);
+      else if(files.length > 3) setStatus("Você escolheu mais de 3. Vou usar só as 3 primeiras.");
+      else setStatus("Tudo certo. Clique em “ENVIAR”.");
+    });
+
+    async function uploadToCloudinary(file){
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("upload_preset", UPLOAD_PRESET);
+      fd.append("folder", FOLDER);
+
+      const res = await fetch(CLOUDINARY_URL, { method:"POST", body: fd });
+      const text = await res.text();
+
+      let data = {};
+      try { data = JSON.parse(text); } catch {}
+
+      if(!res.ok || !data.secure_url){
+        const msg = (data && data.error && data.error.message) ? data.error.message : "Falha no upload (Cloudinary).";
+        throw new Error(msg);
+      }
+      return data.secure_url;
+    }
+
+    async function enviar(){
+      // feedback IMEDIATO pra você ver que clicou
+      setStatus("⏳ Clique detectado... validando dados.");
+
+      const time = (elTime.value || "").trim();
+      const whats = (elWhats.value || "").trim();
+      const files = Array.from(elFotos.files || []).slice(0,3);
+
+      if(!time){
+        setStatus("⚠️ Digite o nome do time.");
+        elTime.focus();
+        return;
+      }
+      if(files.length < 3){
+        setStatus("⚠️ Selecione 3 fotos/prints.");
+        return;
+      }
+
+      btnEnviar.disabled = true;
+      btnLimpar.disabled = true;
+      sendState.textContent = "Enviando…";
+      setProgress(5);
+
+      try{
+        setStatus("📤 Enviando fotos para o Cloudinary…");
+
+        const urls = [];
+        for(let i=0;i<3;i++){
+          setProgress(15 + i*20);
+          urls.push(await uploadToCloudinary(files[i]));
+        }
+
+        setProgress(80);
+        setStatus("💾 Salvando no painel (Firestore)…");
+
+        await db.collection("provas").add({
+          time,
+          whatsapp: whats || null,
+          fotos: urls,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        setProgress(100);
+        setStatus("✅ Enviado! Apareceu na tabela.");
+        sendState.textContent = "Enviado ✅";
+
+        elFotos.value = "";
+        clearPreviews();
+        setProgress(0);
+
+      }catch(e){
+        console.error(e);
+        setProgress(0);
+        setStatus("❌ Erro: " + (e?.message || "não foi possível enviar"));
+        sendState.textContent = "Erro";
+      }finally{
+        btnEnviar.disabled = false;
+        btnLimpar.disabled = false;
+        setTimeout(()=> sendState.textContent = "Pronto", 1500);
+      }
+    }
+
+    function limpar(){
+      elTime.value = "";
+      elWhats.value = "";
+      elFotos.value = "";
+      clearPreviews();
+      setProgress(0);
+      setStatus("Selecione 3 fotos e clique em “ENVIAR”.");
+    }
+
+    btnEnviar.addEventListener("click", enviar);
+    btnLimpar.addEventListener("click", limpar);
+
+    // realtime tabela
+    db.collection("provas")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snap) => {
+        lista.innerHTML = "";
+        if(snap.empty){
+          lista.innerHTML = `<tr><td colspan="2" style="opacity:.75">Sem envios ainda.</td></tr>`;
+          return;
+        }
+
+        snap.forEach((doc) => {
+          const d = doc.data() || {};
+          const fotos = Array.isArray(d.fotos) ? d.fotos : [];
+          const links = fotos.slice(0,3)
+            .map((u,i)=> u ? `<a href="${u}" target="_blank" rel="noopener">Foto${i+1}</a>` : "-" )
+            .join(" | ");
+
+          lista.insertAdjacentHTML("beforeend", `
+            <tr>
+              <td>${escapeHtml(d.time || "-")}</td>
+              <td>${links}</td>
+            </tr>
+          `);
+        });
+
+        lastUpdate.textContent = "Atualizado: " + new Date().toLocaleTimeString("pt-BR");
+      }, (err) => {
+        console.error(err);
+        lista.innerHTML = `<tr><td colspan="2" style="opacity:.75">Erro ao carregar tabela. Verifique as regras do Firestore.</td></tr>`;
+        setStatus("❌ Firestore: " + (err?.message || "erro"));
+      });
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[c]));
+    }
+
+    clearPreviews();
+  </script>
+
+<script>
+  // Menu
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn");
+
+  function openMenu(){ sidebar.classList.add("open"); overlay.classList.add("open"); }
+  function closeMenu(){ sidebar.classList.remove("open"); overlay.classList.remove("open"); }
+
+  menuBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+  overlay.addEventListener("click", closeMenu);
+
+  // fecha ao clicar nos links
+  document.querySelectorAll(".sideLinks a").forEach(a=>{
+    a.addEventListener("click", closeMenu);
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<script>
+  tsParticles.load("particles", {
+    fullScreen:{ enable:true, zIndex:-1 },
+    particles:{
+      number:{ value:60 },
+      color:{ value:"#ffffff" },
+   
