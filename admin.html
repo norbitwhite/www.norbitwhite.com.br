@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Painel Admin • Campeonato</title>
+
+<style>
+  :root{
+    --bg:#0b0215;
+    --stroke:rgba(255,255,255,.10);
+    --txt:rgba(255,255,255,.92);
+    --muted:rgba(255,255,255,.70);
+    --pink:#ff00b7;
+    --purple:#7c00ff;
+    --ok:#39ffb6;
+    --warn:#ffd166;
+    --bad:#ff5c7a;
+  }
+  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  body{
+    margin:0;
+    background: radial-gradient(900px 600px at 12% 10%, rgba(255,0,183,.18), transparent 60%),
+                radial-gradient(900px 600px at 88% 12%, rgba(124,0,255,.20), transparent 60%),
+                linear-gradient(180deg, #07010f, var(--bg));
+    color:#fff;
+  }
+  header{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px;
+    background: rgba(18,2,35,.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--stroke);
+  }
+  .logoCenter{height:40px;width:auto;display:block;}
+  .menuRight{display:flex; gap:10px; align-items:center;}
+  .pill{
+    font-size:12px; color:var(--txt);
+    padding:7px 10px;border-radius:999px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.20);
+    white-space:nowrap;
+  }
+  .btnTop{
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.20);
+    padding:10px 12px;border-radius:14px;
+    color:#fff; cursor:pointer; font-weight:900;
+  }
+
+  .container{max-width:1100px; margin:16px auto 40px; padding:0 16px;}
+  .grid{display:grid; grid-template-columns: .9fr 1.1fr; gap:14px;}
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
+
+  .card{
+    background: rgba(20,3,42,.82);
+    border:1px solid var(--stroke);
+    border-radius:18px;
+    box-shadow:0 18px 55px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  .cardHead{
+    padding:14px 16px;
+    border-bottom:1px solid var(--stroke);
+    display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .cardHead h2{margin:0;font-size:14px;font-weight:950;letter-spacing:.25px}
+  .cardBody{padding:16px;}
+
+  input, select{
+    width:100%;
+    padding:12px 12px;
+    border-radius:12px;
+    border:1px solid var(--stroke);
+    background: rgba(31,5,64,.75);
+    color:#fff;
+    outline:none;
+  }
+  input::placeholder{color:rgba(255,255,255,.55)}
+  label{display:block;font-size:12px;color:var(--txt);margin:10px 0 6px 2px}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:560px){ .row{grid-template-columns:1fr;} }
+
+  .actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;}
+  .btn{
+    border:none;
+    padding:12px 14px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:950;
+    color:#fff;
+    background:linear-gradient(45deg,var(--pink),var(--purple));
+    box-shadow:0 14px 35px rgba(255,0,183,.10), 0 18px 55px rgba(124,0,255,.12);
+  }
+  .btn2{
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.20);
+    padding:12px 14px;border-radius:14px;
+    color:#fff; cursor:pointer; font-weight:900;
+  }
+  .danger{
+    border:1px solid rgba(255,92,122,.35);
+    background:rgba(255,92,122,.10);
+  }
+  .ok{
+    border:1px solid rgba(57,255,182,.28);
+    background:rgba(57,255,182,.10);
+  }
+
+  .statusBox{
+    margin-top:12px;
+    padding:12px;
+    border-radius:14px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.16);
+    font-size:12px;
+    color:var(--txt);
+    line-height:1.35;
+    white-space:pre-wrap;
+  }
+
+  .list{display:grid; gap:10px; margin-top:10px;}
+  .item{
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.16);
+    border-radius:16px;
+    padding:12px;
+    cursor:pointer;
+  }
+  .item:hover{border-color:rgba(255,0,183,.35);}
+  .itemTop{display:flex; justify-content:space-between; gap:10px; align-items:flex-start;}
+  .itemTitle{font-weight:950;}
+  .meta{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.25;}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.18);
+    font-size:12px;
+  }
+  .dot{width:8px;height:8px;border-radius:99px;background:var(--warn);}
+  .dot.ok{background:var(--ok);}
+
+  .photos{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px;}
+  @media (max-width:800px){ .photos{grid-template-columns:1fr;} }
+  .phBox{
+    border:1px solid var(--stroke);
+    border-radius:16px;
+    overflow:hidden;
+    background:rgba(0,0,0,.16);
+    position:relative;
+    min-height:180px;
+  }
+  .phBox img{width:100%; height:180px; object-fit:cover; display:block;}
+  .phTag{
+    position:absolute; top:10px; left:10px;
+    padding:6px 8px;
+    border-radius:999px;
+    font-size:11px;
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.35);
+  }
+
+  .footer{
+    text-align:center;
+    padding:26px 20px;
+    margin-top:20px;
+    font-size:13px;
+    color:rgba(255,255,255,0.6);
+    border-top:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.2);
+    backdrop-filter:blur(6px);
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo400.jpg" class="logoCenter" alt="Logo">
+  <div class="menuRight">
+    <span class="pill" id="who">Admin</span>
+    <button class="btnTop" id="btnReset" type="button">Reset Login</button>
+    <button class="btnTop" id="btnLogout" type="button">Sair</button>
+  </div>
+</header>
+
+<!-- ✅ LOGIN APARECE POR PADRÃO (mesmo se JS falhar) -->
+<div class="container" id="loginView">
+  <div class="card" style="max-width:560px;margin:18px auto;">
+    <div class="cardHead">
+      <h2>🔒 Login do Admin</h2>
+      <span class="pill">Acesso restrito</span>
+    </div>
+    <div class="cardBody">
+      <label>Senha</label>
+      <input id="pass" type="password" placeholder="Digite a senha do admin" autocomplete="off">
+      <div class="actions">
+        <button class="btn" id="btnLogin" type="button">ENTRAR</button>
+      </div>
+      <div class="statusBox" id="loginStatus">Digite a senha para abrir o painel.</div>
+      <div class="statusBox" id="fatal" style="display:none;border-color:rgba(255,92,122,.35);background:rgba(255,92,122,.10)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<main class="container" id="appView" style="display:none;">
+  <div class="grid">
+
+    <!-- LISTA -->
+    <section class="card">
+      <div class="cardHead">
+        <h2>📥 Envios</h2>
+        <span class="pill" id="count">0</span>
+      </div>
+
+      <div class="cardBody">
+        <div class="row">
+          <div>
+            <label>Buscar (time/jogador)</label>
+            <input id="search" placeholder="Ex: Tryhard / player1" autocomplete="off">
+          </div>
+          <div>
+            <label>Filtro</label>
+            <select id="filter">
+              <option value="todos">Todos</option>
+              <option value="pendente">Pendentes</option>
+              <option value="aprovado">Aprovados</option>
+              <option value="pago">Pagos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn2" id="btnRefresh" type="button">Atualizar</button>
+        </div>
+
+        <div class="list" id="list"></div>
+
+        <div class="statusBox" style="opacity:.85">
+          ✅ Clique em um envio para abrir e editar kills.
+        </div>
+      </div>
+    </section>
+
+    <!-- DETALHE -->
+    <section class="card">
+      <div class="cardHead">
+        <h2>🛠️ Detalhe / Validação</h2>
+        <span class="pill" id="selPill">Nenhum selecionado</span>
+      </div>
+
+      <div class="cardBody" id="detailEmpty">
+        <div class="statusBox">
+          Selecione um envio na lista para validar e lançar as kills.
+        </div>
+      </div>
+
+      <div class="cardBody" id="detail" style="display:none;">
+        <div class="statusBox" id="detailInfo">—</div>
+
+        <div class="photos" id="photos"></div>
+
+        <label>Time</label>
+        <input id="d_time" disabled>
+
+        <div class="row">
+          <div>
+            <label>Status</label>
+            <select id="d_status">
+              <option value="pendente">pendente</option>
+              <option value="aprovado">aprovado</option>
+            </select>
+          </div>
+          <div>
+            <label>Pago</label>
+            <select id="d_pago">
+              <option value="false">não</option>
+              <option value="true">sim</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>WhatsApp</label>
+            <input id="d_whats" placeholder="Opcional">
+          </div>
+          <div>
+            <label>Total Kills (auto)</label>
+            <input id="d_total" disabled>
+          </div>
+        </div>
+
+        <div class="statusBox" style="opacity:.85">
+          ✍️ Preencha kills reais de cada jogador e clique em <b>SALVAR</b>.
+        </div>
+
+        <div class="row">
+          <div><label>Jogador 1 (nome)</label><input id="n1"></div>
+          <div><label>Jogador 1 (kills)</label><input id="k1" type="number" inputmode="numeric" placeholder="0"></div>
+        </div>
+        <div class="row">
+          <div><label>Jogador 2 (nome)</label><input id="n2"></div>
+          <div><label>Jogador 2 (kills)</label><input id="k2" type="number" inputmode="numeric" placeholder="0"></div>
+        </div>
+        <div class="row">
+          <div><label>Jogador 3 (nome)</label><input id="n3"></div>
+          <div><label>Jogador 3 (kills)</label><input id="k3" type="number" inputmode="numeric" placeholder="0"></div>
+        </div>
+        <div class="row">
+          <div><label>Jogador 4 (nome)</label><input id="n4"></div>
+          <div><label>Jogador 4 (kills)</label><input id="k4" type="number" inputmode="numeric" placeholder="0"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnSave" type="button">SALVAR</button>
+          <button class="btn2 ok" id="btnWinner" type="button">DEFINIR VENCEDOR</button>
+          <button class="btn2" id="btnPending" type="button">VOLTAR P/ PENDENTE</button>
+          <button class="btn2 danger" id="btnDelete" type="button">REMOVER</button>
+        </div>
+
+        <div class="statusBox" id="opStatus">Pronto.</div>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer">
+  © 2026 <strong>Norbit White</strong>. Painel Admin.
+</footer>
+
+<!-- Firebase compat (carrega ANTES do script principal) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+(function(){
+  const fatal = document.getElementById("fatal");
+  function showFatal(msg){
+    fatal.style.display = "";
+    fatal.textContent = "❌ ERRO NO ADMIN:\n" + msg + "\n\nDica: abra o console do navegador pra ver detalhes.";
+  }
+
+  window.addEventListener("error", (e)=> showFatal(e?.message || "Erro desconhecido"));
+  window.addEventListener("unhandledrejection", (e)=> showFatal((e?.reason && (e.reason.message || String(e.reason))) || "Promise rejeitada"));
+
+  // ====== CONFIG
+  const ADMIN_PASSWORD = "1234"; // <<< TROQUE AQUI
+
+  // Firebase config (seu projeto)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCsNJgQSscvh4Ckjc7BE0jP9SfmtvXloys",
+    authDomain: "painel-campeonato.firebaseapp.com",
+    projectId: "painel-campeonato"
+  };
+
+  // ====== refs
+  const loginView = document.getElementById("loginView");
+  const appView = document.getElementById("appView");
+  const pass = document.getElementById("pass");
+  const btnLogin = document.getElementById("btnLogin");
+  const loginStatus = document.getElementById("loginStatus");
+  const btnLogout = document.getElementById("btnLogout");
+  const btnReset = document.getElementById("btnReset");
+
+  const listEl = document.getElementById("list");
+  const countEl = document.getElementById("count");
+  const searchEl = document.getElementById("search");
+  const filterEl = document.getElementById("filter");
+  const btnRefresh = document.getElementById("btnRefresh");
+
+  const selPill = document.getElementById("selPill");
+  const detailEmpty = document.getElementById("detailEmpty");
+  const detail = document.getElementById("detail");
+  const detailInfo = document.getElementById("detailInfo");
+  const photos = document.getElementById("photos");
+  const opStatus = document.getElementById("opStatus");
+
+  const d_time = document.getElementById("d_time");
+  const d_status = document.getElementById("d_status");
+  const d_pago = document.getElementById("d_pago");
+  const d_whats = document.getElementById("d_whats");
+  const d_total = document.getElementById("d_total");
+
+  const n1 = document.getElementById("n1");
+  const n2 = document.getElementById("n2");
+  const n3 = document.getElementById("n3");
+  const n4 = document.getElementById("n4");
+
+  const k1 = document.getElementById("k1");
+  const k2 = document.getElementById("k2");
+  const k3 = document.getElementById("k3");
+  const k4 = document.getElementById("k4");
+
+  const btnSave = document.getElementById("btnSave");
+  const btnWinner = document.getElementById("btnWinner");
+  const btnPending = document.getElementById("btnPending");
+  const btnDelete = document.getElementById("btnDelete");
+
+  // ====== state
+  let db = null;
+  let allDocs = [];
+  let selectedId = null;
+  let selectedData = null;
+  let unsub = null;
+
+  function esc(s){
+    return String(s||"").replace(/[&<>"']/g, (c)=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+  function toNum(v){
+    const n = Number(String(v||"").replace(",", "."));
+    return Number.isFinite(n) ? n : 0;
+  }
+  function calcTotal(){
+    return toNum(k1.value)+toNum(k2.value)+toNum(k3.value)+toNum(k4.value);
+  }
+  function setOp(msg){ opStatus.textContent = msg; }
+
+  function isAuthed(){ return localStorage.getItem("admin_ok") === "1"; }
+  function showLogin(){ loginView.style.display = ""; appView.style.display = "none"; }
+  function showApp(){ loginView.style.display = "none"; appView.style.display = ""; }
+
+  btnReset.addEventListener("click", () => {
+    localStorage.removeItem("admin_ok");
+    alert("Reset feito. Abra de novo e faça login.");
+    location.reload();
+  });
+
+  btnLogout.addEventListener("click", () => {
+    localStorage.removeItem("admin_ok");
+    if(unsub) unsub();
+    unsub = null;
+    showLogin();
+  });
+
+  btnLogin.addEventListener("click", () => {
+    if(pass.value === ADMIN_PASSWORD){
+      localStorage.setItem("admin_ok", "1");
+      loginStatus.textContent = "✅ Acesso liberado.";
+      showApp();
+      start();
+    }else{
+      loginStatus.textContent = "❌ Senha errada.";
+    }
+  });
+
+  function renderList(){
+    const q = (searchEl.value || "").trim().toLowerCase();
+    const f = filterEl.value;
+
+    let arr = allDocs.slice();
+
+    if(f === "pendente") arr = arr.filter(x => (x.data.status || "pendente") === "pendente");
+    else if(f === "aprovado") arr = arr.filter(x => (x.data.status || "pendente") === "aprovado");
+    else if(f === "pago") arr = arr.filter(x => !!x.data.pago);
+
+    if(q){
+      arr = arr.filter(x => {
+        const d = x.data || {};
+        const time = String(d.time||"").toLowerCase();
+        const j = Array.isArray(d.jogadores) ? d.jogadores : [];
+        const players = j.map(p => String(p?.nome||"").toLowerCase()).join(" ");
+        return time.includes(q) || players.includes(q);
+      });
+    }
+
+    countEl.textContent = String(arr.length);
+    listEl.innerHTML = "";
+
+    if(!arr.length){
+      listEl.innerHTML = `<div class="statusBox">Nenhum resultado.</div>`;
+      return;
+    }
+
+    arr.forEach(x => {
+      const d = x.data || {};
+      const st = (d.status || "pendente");
+      const dot = st === "aprovado" ? "ok" : "";
+      const pago = d.pago ? " • PAGO" : "";
+      const total = Number(d.totalKills||0);
+
+      const jogadores = Array.isArray(d.jogadores) ? d.jogadores : [];
+      const nomes = jogadores.slice(0,4).map(p => p?.nome).filter(Boolean).join(", ");
+      const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString("pt-BR") : "";
+
+      listEl.insertAdjacentHTML("beforeend", `
+        <div class="item" data-id="${esc(x.id)}">
+          <div class="itemTop">
+            <div>
+              <div class="itemTitle">${esc(d.time || "-")}</div>
+              <div class="meta">${esc(nomes || "Sem jogadores")}<br><span style="opacity:.75">${esc(when)}</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+              <span class="badge"><span class="dot ${dot}"></span>${esc(st.toUpperCase())}${pago}</span>
+              <span class="pill">Kills: <b>${esc(String(total))}</b></span>
+            </div>
+          </div>
+        </div>
+      `);
+    });
+
+    document.querySelectorAll(".item").forEach(el => {
+      el.addEventListener("click", () => openDoc(el.getAttribute("data-id")));
+    });
+  }
+
+  async function openDoc(id){
+    selectedId = id;
+    selPill.textContent = "Selecionado: " + id.slice(0,6) + "…";
+    setOp("Carregando…");
+
+    const ref = db.collection("times").doc(id);
+    const snap = await ref.get();
+    if(!snap.exists){
+      setOp("❌ Esse envio não existe mais.");
+      return;
+    }
+
+    selectedData = snap.data() || {};
+    detailEmpty.style.display = "none";
+    detail.style.display = "";
+    fillDetail();
+    setOp("Pronto.");
+  }
+
+  function fillDetail(){
+    const d = selectedData || {};
+    const jogadores = Array.isArray(d.jogadores) ? d.jogadores : [
+      {nome:"",kills:0},{nome:"",kills:0},{nome:"",kills:0},{nome:"",kills:0}
+    ];
+
+    d_time.value = d.time || "";
+    d_whats.value = d.whatsapp || "";
+    d_status.value = (d.status || "pendente");
+    d_pago.value = String(!!d.pago);
+    d_total.value = String(Number(d.totalKills||0));
+
+    n1.value = jogadores[0]?.nome || "";
+    n2.value = jogadores[1]?.nome || "";
+    n3.value = jogadores[2]?.nome || "";
+    n4.value = jogadores[3]?.nome || "";
+
+    k1.value = String(Number(jogadores[0]?.kills||0));
+    k2.value = String(Number(jogadores[1]?.kills||0));
+    k3.value = String(Number(jogadores[2]?.kills||0));
+    k4.value = String(Number(jogadores[3]?.kills||0));
+
+    photos.innerHTML = "";
+    const fs = Array.isArray(d.fotos) ? d.fotos : [];
+    if(!fs.length){
+      photos.innerHTML = `<div class="statusBox">Sem fotos.</div>`;
+    }else{
+      fs.slice(0,3).forEach((url, i) => {
+        photos.insertAdjacentHTML("beforeend", `
+          <div class="phBox">
+            <span class="phTag">Foto ${i+1}</span>
+            <a href="${esc(url)}" target="_blank" rel="noopener">
+              <img src="${esc(url)}" alt="Foto ${i+1}">
+            </a>
+          </div>
+        `);
+      });
+    }
+
+    const st = (d.status || "pendente");
+    const paid = !!d.pago;
+    detailInfo.innerHTML = `
+      <b>Status:</b> ${esc(st)} ${paid ? "• <b>PAGO</b>" : ""} • <b>Total:</b> ${esc(String(Number(d.totalKills||0)))}<br>
+      <span style="opacity:.8">ID: ${esc(selectedId)}</span>
+    `;
+  }
+
+  [k1,k2,k3,k4].forEach(inp => inp.addEventListener("input", () => d_total.value = String(calcTotal())));
+
+  btnSave.addEventListener("click", async () => {
+    if(!selectedId) return;
+
+    const jogadores = [
+      { nome: (n1.value||"").trim(), kills: toNum(k1.value) },
+      { nome: (n2.value||"").trim(), kills: toNum(k2.value) },
+      { nome: (n3.value||"").trim(), kills: toNum(k3.value) },
+      { nome: (n4.value||"").trim(), kills: toNum(k4.value) }
+    ];
+    if(jogadores.some(j => !j.nome)){
+      setOp("⚠️ Preencha o nome dos 4 jogadores.");
+      return;
+    }
+
+    const total = jogadores.reduce((s,j)=>s + (Number(j.kills)||0), 0);
+    const st = d_status.value || "pendente";
+    const pago = (d_pago.value === "true");
+
+    setOp("Salvando…");
+    await
